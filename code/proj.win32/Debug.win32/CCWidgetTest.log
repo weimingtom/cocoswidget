@@ -1,0 +1,81 @@
+﻿生成启动时间为 2013/11/21 20:50:02。
+     1>项目“F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\CCWidgetTest.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx\include" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx\kazmath\include" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx\platform\win32" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx\platform\third_party\win32" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\cocos2dx\platform\third_party\win32\OGLES" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\external" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\external\chipmunk\include\chipmunk" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\CocosDenshion\include" /I"F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\extensions" /I..\Classes /I.. /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USE_MATH_DEFINES /D GL_GLEXT_PROTOTYPES /D CC_ENABLE_CHIPMUNK_INTEGRATION=1 /D COCOS2D_DEBUG=1 /D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS /D _USING_V110_SDK71_ /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug.win32\\" /Fd"Debug.win32\vc110.pdb" /Gd /TP /wd4267 /wd4251 /wd4244 /analyze- /errorReport:prompt ..\Classes\AppDelegate.cpp ..\Classes\cocoswidget\Button.cpp ..\Classes\cocoswidget\GridView.cpp ..\Classes\cocoswidget\ImageView.cpp ..\Classes\cocoswidget\ImageViewScale9.cpp ..\Classes\cocoswidget\Label.cpp ..\Classes\cocoswidget\LabelAtlas.cpp ..\Classes\cocoswidget\LabelBMFont.cpp ..\Classes\cocoswidget\PageView.cpp ..\Classes\cocoswidget\Panel.cpp ..\Classes\cocoswidget\Scale9Sprite.cpp ..\Classes\cocoswidget\ScrollView.cpp ..\Classes\cocoswidget\TableGridView.cpp ..\Classes\cocoswidget\TableView.cpp ..\Classes\cocoswidget\ToggleView.cpp ..\Classes\cocoswidget\Widget.cpp ..\Classes\cocoswidget\WidgetLayout.cpp ..\Classes\MenuScene.cpp ..\Classes\testwidget\ButtonTest\ButtonTest.cpp ..\Classes\testwidget\GridViewTest\GridViewTest.cpp ..\Classes\testwidget\LabelTest\LabelTest.cpp ..\Classes\testwidget\PageViewTest\PageViewTest.cpp ..\Classes\testwidget\PanelTest\PanelTest.cpp ..\Classes\testwidget\ScrollViewTest\ScrollViewTest.cpp ..\Classes\testwidget\TableGridViewTest\TableGridViewTest.cpp ..\Classes\testwidget\TableViewTest\TableViewTest.cpp ..\Classes\testwidget\ToggleViewTest\ToggleViewTest.cpp main.cpp
+         main.cpp
+         ToggleViewTest.cpp
+         TableViewTest.cpp
+         TableGridViewTest.cpp
+         ScrollViewTest.cpp
+         PanelTest.cpp
+         PageViewTest.cpp
+         LabelTest.cpp
+         GridViewTest.cpp
+         ButtonTest.cpp
+         MenuScene.cpp
+         WidgetLayout.cpp
+         Widget.cpp
+         ToggleView.cpp
+         TableView.cpp
+         TableGridView.cpp
+         ScrollView.cpp
+         Scale9Sprite.cpp
+         Panel.cpp
+         PageView.cpp
+         正在生成代码...
+         正在编译...
+         LabelBMFont.cpp
+         LabelAtlas.cpp
+         Label.cpp
+         ImageViewScale9.cpp
+         ImageView.cpp
+         GridView.cpp
+         Button.cpp
+         AppDelegate.cpp
+         正在生成代码...
+       PreLinkEvent:
+         if not exist "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\" mkdir "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\"
+         xcopy /Y /Q "F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\..\..\..\external\libwebsockets\win32\lib\*.*" "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\"
+         :VCEnd
+         复制了 2 个文件
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\CCWidgetTest.exe" /INCREMENTAL /NOLOGO /LIBPATH:"F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\\" libExtensions.lib libcocos2d.lib libCocosDenshion.lib opengl32.lib glew32.lib libBox2d.lib libchipmunk.lib libcurl_imp.lib pthreadVCE2.lib websockets.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\CCWidgetTest.pdb" /SUBSYSTEM:WINDOWS,"5.01" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\CCWidgetTest.lib" /MACHINE:X86 /SAFESEH Debug.win32\AppDelegate.obj
+         Debug.win32\Button.obj
+         Debug.win32\GridView.obj
+         Debug.win32\ImageView.obj
+         Debug.win32\ImageViewScale9.obj
+         Debug.win32\Label.obj
+         Debug.win32\LabelAtlas.obj
+         Debug.win32\LabelBMFont.obj
+         Debug.win32\PageView.obj
+         Debug.win32\Panel.obj
+         Debug.win32\Scale9Sprite.obj
+         Debug.win32\ScrollView.obj
+         Debug.win32\TableGridView.obj
+         Debug.win32\TableView.obj
+         Debug.win32\ToggleView.obj
+         Debug.win32\Widget.obj
+         Debug.win32\WidgetLayout.obj
+         Debug.win32\MenuScene.obj
+         Debug.win32\ButtonTest.obj
+         Debug.win32\GridViewTest.obj
+         Debug.win32\LabelTest.obj
+         Debug.win32\PageViewTest.obj
+         Debug.win32\PanelTest.obj
+         Debug.win32\ScrollViewTest.obj
+         Debug.win32\TableGridViewTest.obj
+         Debug.win32\TableViewTest.obj
+         Debug.win32\ToggleViewTest.obj
+         Debug.win32\main.obj
+         "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\libcocos2d.lib"
+         "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\libCocosDenshion.lib"
+         "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\libExtensions.lib"
+         "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\libBox2D.lib"
+         "F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\libchipmunk.lib"
+     1>AppDelegate.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
+         CCWidgetTest.vcxproj -> F:\cocos2d-x\cocos2d-x-2.2.0\Debug.win32\CCWidgetTest.exe
+     1>已完成生成项目“F:\cocos2d-x\cocos2d-x-2.2.0\projects\CCWidgetTest\proj.win32\CCWidgetTest.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:44.08
