@@ -129,18 +129,24 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\Button.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\CheckBox.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\ControlView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\GridView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\ImageView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\ImageViewScale9.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\Label.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\LabelAtlas.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\LabelBMFont.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\LabelRich.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\ListView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\PageView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\Panel.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\Scale9Sprite.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\ScrollView.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\Slider.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\TableGridView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\TableView.cpp" />
+    <ClCompile Include="..\Classes\cocoswidget\TextField.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\ToggleView.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\Widget.cpp" />
     <ClCompile Include="..\Classes\cocoswidget\WidgetLayout.cpp" />
@@ -148,6 +154,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClCompile Include="..\Classes\testwidget\ButtonTest\ButtonTest.cpp" />
     <ClCompile Include="..\Classes\testwidget\GridViewTest\GridViewTest.cpp" />
     <ClCompile Include="..\Classes\testwidget\LabelTest\LabelTest.cpp" />
+    <ClCompile Include="..\Classes\testwidget\ListViewTest\ListViewTest.cpp" />
     <ClCompile Include="..\Classes\testwidget\PageViewTest\PageViewTest.cpp" />
     <ClCompile Include="..\Classes\testwidget\PanelTest\PanelTest.cpp" />
     <ClCompile Include="..\Classes\testwidget\ScrollViewTest\ScrollViewTest.cpp" />
@@ -159,19 +166,25 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
   <ItemGroup>
     <ClInclude Include="..\Classes\AppDelegate.h" />
     <ClInclude Include="..\Classes\cocoswidget\Button.h" />
+    <ClInclude Include="..\Classes\cocoswidget\CheckBox.h" />
     <ClInclude Include="..\Classes\cocoswidget\cocos-widget.h" />
+    <ClInclude Include="..\Classes\cocoswidget\ControlView.h" />
     <ClInclude Include="..\Classes\cocoswidget\GridView.h" />
     <ClInclude Include="..\Classes\cocoswidget\ImageView.h" />
     <ClInclude Include="..\Classes\cocoswidget\ImageViewScale9.h" />
     <ClInclude Include="..\Classes\cocoswidget\Label.h" />
     <ClInclude Include="..\Classes\cocoswidget\LabelAtlas.h" />
     <ClInclude Include="..\Classes\cocoswidget\LabelBMFont.h" />
+    <ClInclude Include="..\Classes\cocoswidget\LabelRich.h" />
+    <ClInclude Include="..\Classes\cocoswidget\ListView.h" />
     <ClInclude Include="..\Classes\cocoswidget\PageView.h" />
     <ClInclude Include="..\Classes\cocoswidget\Panel.h" />
     <ClInclude Include="..\Classes\cocoswidget\Scale9Sprite.h" />
     <ClInclude Include="..\Classes\cocoswidget\ScrollView.h" />
+    <ClInclude Include="..\Classes\cocoswidget\Slider.h" />
     <ClInclude Include="..\Classes\cocoswidget\TableGridView.h" />
     <ClInclude Include="..\Classes\cocoswidget\TableView.h" />
+    <ClInclude Include="..\Classes\cocoswidget\TextField.h" />
     <ClInclude Include="..\Classes\cocoswidget\ToggleView.h" />
     <ClInclude Include="..\Classes\cocoswidget\Widget.h" />
     <ClInclude Include="..\Classes\cocoswidget\WidgetLayout.h" />
@@ -180,6 +193,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\..\external\libwebsockets\win32\lib\*.*" "$(OutD
     <ClInclude Include="..\Classes\testwidget\ButtonTest\ButtonTest.h" />
     <ClInclude Include="..\Classes\testwidget\GridViewTest\GridViewTest.h" />
     <ClInclude Include="..\Classes\testwidget\LabelTest\LabelTest.h" />
+    <ClInclude Include="..\Classes\testwidget\ListViewTest\ListViewTest.h" />
     <ClInclude Include="..\Classes\testwidget\PageViewTest\PageViewTest.h" />
     <ClInclude Include="..\Classes\testwidget\PanelTest\PanelTest.h" />
     <ClInclude Include="..\Classes\testwidget\ScrollViewTest\ScrollViewTest.h" />

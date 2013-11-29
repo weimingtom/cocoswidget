@@ -8,6 +8,7 @@
 #include "testwidget/LabelTest/LabelTest.h"
 #include "testwidget/PanelTest/PanelTest.h"
 #include "testwidget/PageViewTest/PageViewTest.h"
+#include "testwidget/ListViewTest/ListViewTest.h"
 
 #define MENU_ITEM_ID_BUTTON 0
 #define MENU_ITEM_ID_TOGGLE 1
@@ -18,6 +19,7 @@
 #define MENU_ITEM_ID_GRID 6
 #define MENU_ITEM_ID_PANEL 7
 #define MENU_ITEM_ID_PAGE 8
+#define MENU_ITEM_ID_LISTVIEW 9
 
 MenuScene::MenuScene()
 : m_pMenuTableView(NULL)
@@ -34,15 +36,16 @@ bool MenuScene::init()
 {
 	CCScene::init();
 
-	m_vMenuItems.push_back("CButton Test");
-	m_vMenuItems.push_back("CToggleView Test");
-	m_vMenuItems.push_back("CLabel Test");
-	m_vMenuItems.push_back("CScrollView Test");
-	m_vMenuItems.push_back("CTableView Test");
-	m_vMenuItems.push_back("CTableGridView Test");
-	m_vMenuItems.push_back("CGridView Test");
-	m_vMenuItems.push_back("CPanel Test");
-	m_vMenuItems.push_back("CPageView Test");
+	m_vMenuItems.push_back("Button Test");
+	m_vMenuItems.push_back("ToggleView Test");
+	m_vMenuItems.push_back("Label Test");
+	m_vMenuItems.push_back("ScrollView Test");
+	m_vMenuItems.push_back("TableView Test");
+	m_vMenuItems.push_back("TableGridView Test");
+	m_vMenuItems.push_back("GridView Test");
+	m_vMenuItems.push_back("Panel Test");
+	m_vMenuItems.push_back("PageView Test");
+	m_vMenuItems.push_back("ListView Test");
 
 	CWidgetLayout* pLayout = CWidgetLayout::create();
 	addChild(pLayout);
@@ -168,6 +171,11 @@ void MenuScene::onTextClick(CCObject* pSender)
 	case MENU_ITEM_ID_PAGE:
 		{
 			pushCPageViewTestScene();
+		}
+		break;
+	case MENU_ITEM_ID_LISTVIEW:
+		{
+			pushCListViewTestScene();
 		}
 		break;
 	default:

@@ -37,6 +37,9 @@
     <Filter Include="Classes\ToggleViewTest">
       <UniqueIdentifier>{ca6bc47a-5736-46fb-866f-32450e5c2245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\ListViewTest">
+      <UniqueIdentifier>{95e19f21-ffdd-4b0e-b7f8-edd5db300120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -122,6 +125,27 @@
     </ClCompile>
     <ClCompile Include="..\Classes\testwidget\ToggleViewTest\ToggleViewTest.cpp">
       <Filter>Classes\ToggleViewTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\ListView.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\CheckBox.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\ControlView.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\LabelRich.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\Slider.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\cocoswidget\TextField.cpp">
+      <Filter>cocoswidget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\testwidget\ListViewTest\ListViewTest.cpp">
+      <Filter>Classes\ListViewTest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +238,27 @@
     </ClInclude>
     <ClInclude Include="..\Classes\testwidget\ToggleViewTest\ToggleViewTest.h">
       <Filter>Classes\ToggleViewTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\ListView.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\CheckBox.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\ControlView.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\LabelRich.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\Slider.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\cocoswidget\TextField.h">
+      <Filter>cocoswidget</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\testwidget\ListViewTest\ListViewTest.h">
+      <Filter>Classes\ListViewTest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
