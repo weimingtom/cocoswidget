@@ -551,6 +551,30 @@ void CScrollView::setContentOffsetToTopEaseIn(float fDuration, float fRate)
 	}
 }
 
+void CScrollView::setContentOffsetToBottom()
+{
+	if( m_eDirection == eScrollViewDirectionVertical )
+	{
+		setContentOffset(m_tMaxOffset);
+	}
+}
+
+void CScrollView::setContentOffsetToRight()
+{
+	if( m_eDirection == eScrollViewDirectionHorizontal )
+	{
+		setContentOffset(m_tMinOffset);
+	}
+}
+
+void CScrollView::setContentOffsetToLeft()
+{
+	if( m_eDirection == eScrollViewDirectionHorizontal )
+	{
+		setContentOffset(m_tMaxOffset);
+	}
+}
+
 void CScrollView::setContentOffsetWithoutCheck(const CCPoint& tOffset)
 {
 	m_pContainer->setPosition(tOffset);

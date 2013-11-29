@@ -484,14 +484,14 @@ CCArray* CTableView::getCells()
 		}
 	}
 
-	if( !m_pCellsFreed->empty() )
-	{
-		list<CTableViewCell*>::iterator iter = m_pCellsFreed->begin();
-		for(; iter != m_pCellsFreed->end(); ++iter)
-		{
-			pArray->addObject(*iter);
-		}
-	}
+	//if( !m_pCellsFreed->empty() )
+	//{
+	//	list<CTableViewCell*>::iterator iter = m_pCellsFreed->begin();
+	//	for(; iter != m_pCellsFreed->end(); ++iter)
+	//	{
+	//		pArray->addObject(*iter);
+	//	}
+	//}
 
 	pArray->autorelease();
 	return pArray;

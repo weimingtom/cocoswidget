@@ -56,7 +56,7 @@ typedef void (CCObject::*SEL_AfterLongClickHandler)(CCObject *pSender, CCTouch *
  * 功能 : 所有控件的根节点，负责接收2d-x提供的事件处理，并提供
           处理长点击之后的事件处理
  */
-class CWidgetLayout : public CCNode, public CCTouchDelegate
+class CWidgetLayout : public CCNodeRGBA, public CCTouchDelegate
 {
 public:
 	CWidgetLayout();
@@ -144,7 +144,7 @@ public:
 	 * 输入 : id - 子控件id
 	 * 输出 : 子控件
 	 */
-	virtual CCObject* findViewById(int id);
+	virtual CCObject* findViewById(const char* id);
 
 	/**
 	 * 名称 : setTouchMovedAfterLongClickSelector()
@@ -177,7 +177,7 @@ public:
 	virtual void setLongClickTouchHandlerWidget(CCNode* pWidget);
 	
 protected:
-	virtual CCObject* find(CCArray* pChidren, int id);
+	virtual CCObject* find(CCArray* pChidren, const char* id);
 	CWidget* collisionWithWidget(const CCPoint& tPoint);
 	virtual void executeTouchMovedAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);
     virtual void executeTouchEndedAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);

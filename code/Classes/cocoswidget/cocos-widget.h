@@ -47,5 +47,7 @@ THE SOFTWARE.
 #include "ImageView.h"
 #include "ImageViewScale9.h"
 #include "PageView.h"
+#include "ListView.h"
+#include "CheckBox.h"
 
 #endif //__CCWIDGET_H__

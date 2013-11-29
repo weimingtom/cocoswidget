@@ -43,7 +43,7 @@ class CWidgetTouchProtocol;
 
 /**
  * 枚举 : CWidgetTouchModel
- * 作者 : [西安]-Viva
+ * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : cocoswidget体系中的控件触摸模式
  */
@@ -106,7 +106,7 @@ typedef void (CCObject::*SEL_CheckHandler)(CCObject *pSender, bool bChecked);
 
 /**
  * 类名 : CWidgetTouchProtocol
- * 作者 : [西安]-Viva
+ * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 描述了在cocoswidget控件体系中所存在的事件分发回调函数
  */
@@ -121,7 +121,7 @@ public:
 
 /**
  * 类名 : CCheckableProtocol
- * 作者 : [西安]-Viva
+ * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 描述了所有具有选中状态属性的控件
  */
@@ -220,7 +220,7 @@ virtual void onScheduleUpdate(float dt){ updateWidget(dt); };
 
 /**
  * 类名 : CWidget
- * 作者 : [西安]-Viva
+ * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : CWidget是一个描述了控件基本信息的接口类。所以实现的控件都继承自CWidget
  */
@@ -252,7 +252,7 @@ public:
 	 * 输入 : 
 	 * 输出 : 控件id
 	 */
-	virtual int getId() const;
+	virtual const char* getId();
 
 	/**
 	 * 名称 : setId()
@@ -260,7 +260,7 @@ public:
 	 * 输入 : nId - 控件id
 	 * 输出 : 
 	 */
-	virtual void setId(int nId);
+	virtual void setId(const char* id);
 
 	/**
 	 * 名称 : isEnabled()
@@ -537,7 +537,7 @@ protected:
 
 protected:
 	/// 控件id
-	int m_nId;
+	std::string m_strId;
 	/// 控件用户标识
 	int m_nUserTag;
 	/// 控件是否可用

@@ -55,16 +55,16 @@ int CWidgetLayout::getTouchPriority()
 	return m_nTouchPriority;
 }
 
-CCObject* CWidgetLayout::findViewById(int id)
+CCObject* CWidgetLayout::findViewById(const char* id)
 {
-	if( id != -1 )
+	if( id && strlen(id) )
 	{
 		return find(m_pChildren, id);
 	}
 	return NULL;
 }
 
-CCObject* CWidgetLayout::find(CCArray* pChidren, int id)
+CCObject* CWidgetLayout::find(CCArray* pChidren, const char* id)
 {
 	if( pChidren && pChidren->count() > 0 )
 	{
@@ -75,7 +75,7 @@ CCObject* CWidgetLayout::find(CCArray* pChidren, int id)
 			CWidget* pWidget = dynamic_cast<CWidget*>(pObject);
 			if( pWidget )
 			{
-				if( pWidget->getId() == id )
+				if( strcmp(pWidget->getId(), id) == 0 )
 				{
 					return dynamic_cast<CCNode*>(pObject);
 				}

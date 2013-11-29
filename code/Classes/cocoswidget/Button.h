@@ -49,7 +49,7 @@ NS_CC_WIDGET_BEGIN
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 按钮控件，可以设置3种状态
  */
-class CButton : public CCNode, public CWidget
+class CButton : public CCNodeRGBA, public CWidget
 {
 public:
 	CButton();

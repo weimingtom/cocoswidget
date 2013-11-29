@@ -79,7 +79,7 @@ int CCheckableProtocol::getExclusion()
 
 
 CWidget::CWidget()
-: m_nId(-1)
+: m_strId("")
 , m_pWidgetNode(NULL)
 , m_bEnabled(true)
 , m_bTouchEnabled(true)
@@ -127,14 +127,14 @@ void CWidget::setUserTag(int nTag)
 	m_nUserTag = nTag;
 }
 
-int CWidget::getId() const
+const char* CWidget::getId()
 {
-	return m_nId;
+	return m_strId.c_str();
 }
 
-void CWidget::setId(int nId)
+void CWidget::setId(const char* id)
 {
-	m_nId = nId;
+	m_strId = id;
 }
 
 bool CWidget::isEnabled()
@@ -177,22 +177,6 @@ void CWidget::updateWidget(float dt)
 		}
 	}
 }
-
-//void CWidget::performTouchedUpdate()
-//{
-//	if( !m_bTouchedUpdate )
-//	{
-//		m_bTouchedUpdate = true;
-//	}
-//}
-//
-//void CWidget::stopTouchedUpdate()
-//{
-//	if( m_bTouchedUpdate )
-//	{
-//		m_bTouchedUpdate = false;
-//	}
-//}
 
 void CWidget::setClickSelector(CCObject *pTarget, SEL_ClickHandler pHandler)
 {

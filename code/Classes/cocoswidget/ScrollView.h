@@ -32,6 +32,8 @@ THE SOFTWARE.
 /// Update : [1] changed text "SEL_ScrollViewHandler" to "SEL_ScrollViewHandler"
 /// Update : [2] changed function name "setScrollSelector" to "setScrollViewSelector"
 /// Update : [3] changed text "scroll_selector" to "scrollview_selector"
+/// Update : [3] add function setContentOffsetToRight / 
+///              setContentOffsetToBottom / setContentOffsetToLeft
 /////////////////////////////////////////////////////////////////////////////
 
 #include "cocos2d.h"
@@ -327,6 +329,30 @@ public:
 	 * 输出 : 
 	 */
 	void setContentOffsetToTopEaseIn(float fDuration, float fRate);
+
+	/**
+	 * 名称 : setContentOffsetToTop()
+	 * 功能 : 设置滑动容器内容的位置，显示在最下边，只有在垂直滚动时生效
+	 * 输入 : 
+	 * 输出 : 
+	 */
+	void setContentOffsetToBottom();
+
+	/**
+	 * 名称 : setContentOffsetToRight()
+	 * 功能 : 设置滑动容器内容的位置，显示在最右边，只有在水平滚动时生效
+	 * 输入 : 
+	 * 输出 : 
+	 */
+	void setContentOffsetToRight();
+
+	/**
+	 * 名称 : setContentOffsetToLeft()
+	 * 功能 : 设置滑动容器内容的位置，显示在最左边，只有在水平滚动时生效
+	 * 输入 : 
+	 * 输出 : 
+	 */
+	void setContentOffsetToLeft();
 
 	/**
 	 * 名称 : relocateContainer()
