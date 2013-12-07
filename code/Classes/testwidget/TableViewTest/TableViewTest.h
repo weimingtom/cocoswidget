@@ -21,7 +21,7 @@ class CTableViewBasicTest : public CTableViewTestSceneBase
 {
 public:
 	virtual bool init();
-	CTableViewCell* tableviewDataSource(CTableView* pTable, unsigned int idx);
+	CCObject* tableviewDataSource(CCObject* pConvertView, unsigned int idx);
 };
 
 //////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ class CTableViewBindingDataAndVertical : public CTableViewTestSceneBase
 {
 public:
 	virtual bool init();
-	CTableViewCell* tableviewDataSource(CTableView* pTable, unsigned int idx);
+	CCObject* tableviewDataSource(CCObject* pConvertView, unsigned int idx);
 	std::vector<std::string> m_vDatas;
 	void onClick(CCObject* pSender);
 	CLabel* pText;
@@ -42,7 +42,7 @@ class CTableViewReloadTest : public CTableViewTestSceneBase
 {
 public:
 	virtual bool init();
-	CTableViewCell* tableviewDataSource(CTableView* pTable, unsigned int idx);
+	CCObject* tableviewDataSource(CCObject* pConvertView, unsigned int idx);
 	void onClick(CCObject* pSender);
 	std::list<string> m_lDataQueue;
 	std::vector<string> m_vDatas;

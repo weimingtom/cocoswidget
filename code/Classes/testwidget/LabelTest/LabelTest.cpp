@@ -30,12 +30,12 @@ bool CLabelBasicTest::init()
 
 	CLabel* pText2 = CLabel::create("Click me test event", "", 30.0f);
 	pText2->setTouchEnabled(true);
-	pText2->setLongClickSelector(this, longclick_selector(CLabelBasicTest::onLongClick));
-	pText2->setClickSelector(this, click_selector(CLabelBasicTest::onClick));
-	pText2->setTouchBeganSelector(this, touchbegan_selector(CLabelBasicTest::onTouchBegan));
-	pText2->setTouchMovedSelector(this, touch_selector(CLabelBasicTest::onTouchMoved));
-	pText2->setTouchEndedSelector(this, touch_selector(CLabelBasicTest::onTouchEnded));
-	pText2->setTouchCancelledSelector(this, touch_selector(CLabelBasicTest::onTouchEnded));
+	pText2->setOnLongClickListener(this, ccw_longclick_selector(CLabelBasicTest::onLongClick));
+	pText2->setOnClickListener(this, ccw_click_selector(CLabelBasicTest::onClick));
+	pText2->setOnTouchBeganListener(this, ccw_touchbegan_selector(CLabelBasicTest::onTouchBegan));
+	pText2->setOnTouchMovedListener(this, ccw_touchevent_selector(CLabelBasicTest::onTouchMoved));
+	pText2->setOnTouchEndedListener(this, ccw_touchevent_selector(CLabelBasicTest::onTouchEnded));
+	pText2->setOnTouchCancelledListener(this, ccw_touchevent_selector(CLabelBasicTest::onTouchEnded));
 	pText2->setColor(ccc3(0, 255, 0));
 	pText2->setPosition(CCPoint(480, 380));
 	m_pLayout->addChild(pText2);
@@ -78,7 +78,7 @@ void CLabelBasicTest::onClick(CCObject* pSender)
 	pText3->setString("Clicked");
 }
 
-bool CLabelBasicTest::onLongClick(CCObject* pSender)
+bool CLabelBasicTest::onLongClick(CCObject* pSender, CCTouch* pTouch)
 {
 	pText3->setString("LongClicked");
 	return false;
@@ -96,9 +96,9 @@ bool CLabelAtlasTest::init()
 	pText->setTouchEnabled(true);
 	pText->setAnchorPoint(CCPoint(0.5, 0.5));
 	pText->setPosition(CCPoint(480, 320));
-	pText->setTouchBeganSelector(this, touchbegan_selector(CLabelAtlasTest::onTouchBegan));
-	pText->setTouchEndedSelector(this, touch_selector(CLabelAtlasTest::onTouchEnded));
-	pText->setTouchCancelledSelector(this, touch_selector(CLabelAtlasTest::onTouchEnded));
+	pText->setOnTouchBeganListener(this, ccw_touchbegan_selector(CLabelAtlasTest::onTouchBegan));
+	pText->setOnTouchEndedListener(this, ccw_touchevent_selector(CLabelAtlasTest::onTouchEnded));
+	pText->setOnTouchCancelledListener(this, ccw_touchevent_selector(CLabelAtlasTest::onTouchEnded));
 	m_pLayout->addChild(pText);
 
 	return true;

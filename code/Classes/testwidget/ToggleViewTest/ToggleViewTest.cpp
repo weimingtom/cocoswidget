@@ -24,7 +24,7 @@ bool CToggleViewBasicTest::init()
 	setDescription("toggle button");
 
 	CToggleView* pToggle = CToggleView::create("toggle1_2.png", "toggle1_1.png");
-	pToggle->setClickSelector(this, click_selector(CToggleViewBasicTest::onClick));
+	pToggle->setOnClickListener(this, ccw_click_selector(CToggleViewBasicTest::onClick));
 	pToggle->setPosition(CCPoint(480, 320));
 	m_pLayout->addChild(pToggle);
 
@@ -60,19 +60,19 @@ bool CToggleViewGroupTest::init()
 	setDescription("Toggle button in group");
 
 	CToggleView* pToggle1 = CToggleView::create("toggle1_2.png", "toggle1_1.png");
-	pToggle1->setCheckSelector(this, check_selector(CToggleViewGroupTest::onCheck));
+	pToggle1->setOnCheckListener(this, ccw_check_selector(CToggleViewGroupTest::onCheck));
 	pToggle1->setPosition(CCPoint(200, 450));
 	pToggle1->setExclusion(1);
 	m_pLayout->addChild(pToggle1);
 
 	CToggleView* pToggle2 = CToggleView::create("toggle1_2.png", "toggle1_1.png");
-	pToggle2->setCheckSelector(this, check_selector(CToggleViewGroupTest::onCheck));
+	pToggle2->setOnCheckListener(this, ccw_check_selector(CToggleViewGroupTest::onCheck));
 	pToggle2->setPosition(CCPoint(200, 350));
 	pToggle2->setExclusion(1);
 	m_pLayout->addChild(pToggle2);
 
 	CToggleView* pToggle3 = CToggleView::create("toggle1_2.png", "toggle1_1.png");
-	pToggle3->setCheckSelector(this, check_selector(CToggleViewGroupTest::onCheck));
+	pToggle3->setOnCheckListener(this, ccw_check_selector(CToggleViewGroupTest::onCheck));
 	pToggle3->setPosition(CCPoint(200, 250));
 	pToggle3->setExclusion(1);
 	m_pLayout->addChild(pToggle3);

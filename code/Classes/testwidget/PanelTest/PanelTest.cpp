@@ -26,7 +26,7 @@ bool CPanelBasicTest::init()
 	CPanel* pPanel = CPanel::create();
 	pPanel->setPosition(CCPoint(480 ,320));
 	pPanel->setContentSize(CCPoint(480, 320));
-	pPanel->setBackgroundNode(CCSprite::create("background.png"));
+	pPanel->setBackgroundImage("background.png");
 	m_pLayout->addChild(pPanel);
 
 	CButton* pButton = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");

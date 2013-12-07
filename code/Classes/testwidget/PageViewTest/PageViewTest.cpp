@@ -26,8 +26,8 @@ bool CPageViewBasicTest::init()
 	CPageView* pPageView = CPageView::create(
 		CCSize(484, 320),
 		10, this,
-		pageviewdatasource_selector(CPageViewBasicTest::pageviewDataSource));
-	pPageView->setPageChangedSelector(this, pageviewchanged_selector(CPageViewBasicTest::onPageChanged));
+		ccw_datasource_adapter_selector(CPageViewBasicTest::pageviewDataSource));
+	pPageView->setOnPageChangedListener(this, ccw_pagechanged_selector(CPageViewBasicTest::onPageChanged));
 	pPageView->setPosition(CCPoint(480, 320));
 	m_pLayout->addChild(pPageView);
 	pPageView->reloadData();
@@ -42,17 +42,16 @@ bool CPageViewBasicTest::init()
 	return true;
 }
 
-CPageViewCell* CPageViewBasicTest::pageviewDataSource(CPageView* pPage, unsigned int nPageIdx)
+CCObject* CPageViewBasicTest::pageviewDataSource(CCObject* pConvertCell, unsigned int nPageIdx)
 {
-	CPageViewCell* pPageCell = pPage->dequeuePage();
+	CPageViewCell* pPageCell = (CPageViewCell*) pConvertCell;
 	CButton* pButton = NULL;
 
 	if( !pPageCell )
 	{
 		pPageCell = new CPageViewCell();
 		pPageCell->autorelease();
-		pPageCell->setBackgroundNode(CCSprite::create("background.png"));
-		pPageCell->getBackgroundNode()->setPosition(484 / 2, 320 / 2);
+		pPageCell->setBackgroundImage("background.png");
 
 		pButton = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 		pButton->getLabel()->setFontSize(30.0f);
@@ -90,8 +89,8 @@ bool CPageViewVerticalTest::init()
 	CPageView* pPageView = CPageView::create(
 		CCSize(484, 320),
 		10, this,
-		pageviewdatasource_selector(CPageViewVerticalTest::pageviewDataSource));
-	pPageView->setPageChangedSelector(this, pageviewchanged_selector(CPageViewVerticalTest::onPageChanged));
+		ccw_datasource_adapter_selector(CPageViewVerticalTest::pageviewDataSource));
+	pPageView->setOnPageChangedListener(this, ccw_pagechanged_selector(CPageViewVerticalTest::onPageChanged));
 	pPageView->setPosition(CCPoint(480, 320));
 	pPageView->setDirection(eScrollViewDirectionVertical);
 	m_pLayout->addChild(pPageView);
@@ -107,17 +106,16 @@ bool CPageViewVerticalTest::init()
 	return true;
 }
 
-CPageViewCell* CPageViewVerticalTest::pageviewDataSource(CPageView* pPage, unsigned int nPageIdx)
+CCObject* CPageViewVerticalTest::pageviewDataSource(CCObject* pConvertCell, unsigned int nPageIdx)
 {
-	CPageViewCell* pPageCell = pPage->dequeuePage();
+	CPageViewCell* pPageCell = (CPageViewCell*) pConvertCell;
 	CButton* pButton = NULL;
 
 	if( !pPageCell )
 	{
 		pPageCell = new CPageViewCell();
 		pPageCell->autorelease();
-		pPageCell->setBackgroundNode(CCSprite::create("background.png"));
-		pPageCell->getBackgroundNode()->setPosition(484 / 2, 320 / 2);
+		pPageCell->setBackgroundImage("background.png");
 
 		pButton = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 		pButton->getLabel()->setFontSize(30.0f);

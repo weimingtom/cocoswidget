@@ -45,7 +45,7 @@ bool CListViewBasicTest::init()
 	//<<
 
 	m_pListView = CListView::create(CCSize(480, 320));
-	m_pListView->setBackgroundNode(CCSprite::create("background.png"));
+	m_pListView->setBackgroundImage("background.png");
 	m_pListView->setPosition(CCPoint(480, 320));
 	m_pListView->setDirection(eScrollViewDirectionVertical);
 	m_pLayout->addChild(m_pListView);
@@ -53,7 +53,7 @@ bool CListViewBasicTest::init()
 	CButton* pButton = CButton::createWith9Sprite(CCSize(150, 50),
 		"sprite9_btn1.png", "sprite9_btn2.png");
 	pButton->setPosition(CCPoint(150, 320));
-	pButton->setClickSelector(this, click_selector(CListViewBasicTest::onClick));
+	pButton->setOnClickListener(this, ccw_click_selector(CListViewBasicTest::onClick));
 	pButton->getLabel()->initWithString("Add", "", 30);
 	m_pLayout->addChild(pButton);
 
@@ -90,7 +90,7 @@ bool CListViewOperateTest::init()
 	setDescription("Add or Remove operate");
 
 	m_pListView = CListView::create(CCSize(480, 320));
-	m_pListView->setBackgroundNode(CCSprite::create("background.png"));
+	m_pListView->setBackgroundImage("background.png");
 	m_pListView->setPosition(CCPoint(480, 320));
 	m_pListView->setDirection(eScrollViewDirectionVertical);
 	m_pLayout->addChild(m_pListView);
@@ -99,7 +99,7 @@ bool CListViewOperateTest::init()
 		"sprite9_btn1.png", "sprite9_btn2.png");
 	pButton->setPosition(CCPoint(150, 450));
 	pButton->setUserTag(1);
-	pButton->setClickSelector(this, click_selector(CListViewOperateTest::onClick));
+	pButton->setOnClickListener(this, ccw_click_selector(CListViewOperateTest::onClick));
 	pButton->getLabel()->initWithString("Add Last", "", 30);
 	m_pLayout->addChild(pButton);
 
@@ -107,7 +107,7 @@ bool CListViewOperateTest::init()
 		"sprite9_btn1.png", "sprite9_btn2.png");
 	pButton2->setPosition(CCPoint(150, 380));
 	pButton2->setUserTag(2);
-	pButton2->setClickSelector(this, click_selector(CListViewOperateTest::onClick));
+	pButton2->setOnClickListener(this, ccw_click_selector(CListViewOperateTest::onClick));
 	pButton2->getLabel()->initWithString("Add Front", "", 30);
 	m_pLayout->addChild(pButton2);
 
@@ -115,7 +115,7 @@ bool CListViewOperateTest::init()
 		"sprite9_btn1.png", "sprite9_btn2.png");
 	pButton3->setPosition(CCPoint(150, 310));
 	pButton3->setUserTag(3);
-	pButton3->setClickSelector(this, click_selector(CListViewOperateTest::onClick));
+	pButton3->setOnClickListener(this, ccw_click_selector(CListViewOperateTest::onClick));
 	pButton3->getLabel()->initWithString("Remove Last", "", 30);
 	m_pLayout->addChild(pButton3);
 
@@ -123,7 +123,7 @@ bool CListViewOperateTest::init()
 		"sprite9_btn1.png", "sprite9_btn2.png");
 	pButton4->setPosition(CCPoint(150, 240));
 	pButton4->setUserTag(4);
-	pButton4->setClickSelector(this, click_selector(CListViewOperateTest::onClick));
+	pButton4->setOnClickListener(this, ccw_click_selector(CListViewOperateTest::onClick));
 	pButton4->getLabel()->initWithString("Remove Front", "", 30);
 	m_pLayout->addChild(pButton4);
 

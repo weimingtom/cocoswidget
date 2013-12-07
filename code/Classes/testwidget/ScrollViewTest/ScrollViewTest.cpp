@@ -54,7 +54,7 @@ bool CScrollViewEventTest::init()
 	m_pLayout->addChild(pBg);
 
 	CScrollView* pScroll = CScrollView::create(CCSize(480, 320));
-	pScroll->setScrollViewSelector(this, scrollview_selector(CScrollViewEventTest::onScrolling));
+	pScroll->setOnScrollingListener(this, ccw_scrolling_selector(CScrollViewEventTest::onScrolling));
 	pScroll->setPosition(CCPoint(680, 320));
 	pScroll->setDirection(eScrollViewDirectionBoth);
 	m_pLayout->addChild(pScroll);
@@ -197,7 +197,7 @@ bool CScrollViewAttributeTest::init()
 	pToggle1->getLabel()->initWithString("setDeaccelerateable", "", 28);
 	pToggle1->setPosition(150, 480);
 	pToggle1->setChecked(true);
-	pToggle1->setClickSelector(this, click_selector(CScrollViewAttributeTest::onClick));
+	pToggle1->setOnClickListener(this, ccw_click_selector(CScrollViewAttributeTest::onClick));
 	pToggle1->setUserTag(1);
 	m_pLayout->addChild(pToggle1);
 
@@ -213,7 +213,7 @@ bool CScrollViewAttributeTest::init()
 	pToggle2->getLabel()->initWithString("setBounceable", "", 28);
 	pToggle2->setPosition(150, 400);
 	pToggle2->setChecked(true);
-	pToggle2->setClickSelector(this, click_selector(CScrollViewAttributeTest::onClick));
+	pToggle2->setOnClickListener(this, ccw_click_selector(CScrollViewAttributeTest::onClick));
 	pToggle2->setUserTag(2);
 	m_pLayout->addChild(pToggle2);
 
@@ -230,7 +230,7 @@ bool CScrollViewAttributeTest::init()
 	pToggle3->getLabel()->initWithString("setDragable", "", 28);
 	pToggle3->setPosition(150, 320);
 	pToggle3->setChecked(true);
-	pToggle3->setClickSelector(this, click_selector(CScrollViewAttributeTest::onClick));
+	pToggle3->setOnClickListener(this, ccw_click_selector(CScrollViewAttributeTest::onClick));
 	pToggle3->setUserTag(3);
 	m_pLayout->addChild(pToggle3);
 
@@ -247,7 +247,7 @@ bool CScrollViewAttributeTest::init()
 	pToggle4->getLabel()->initWithString("setTouchEnabled", "", 28);
 	pToggle4->setPosition(150, 240);
 	pToggle4->setChecked(true);
-	pToggle4->setClickSelector(this, click_selector(CScrollViewAttributeTest::onClick));
+	pToggle4->setOnClickListener(this, ccw_click_selector(CScrollViewAttributeTest::onClick));
 	pToggle4->setUserTag(4);
 	m_pLayout->addChild(pToggle4);
 
@@ -329,7 +329,7 @@ bool CScrollViewAnimationTest::init()
 	CButton* pButton1 = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 	pButton1->getLabel()->initWithString("scrollToRight", "", 28);
 	pButton1->setPosition(120, 480);
-	pButton1->setClickSelector(this, click_selector(CScrollViewAnimationTest::onClick));
+	pButton1->setOnClickListener(this, ccw_click_selector(CScrollViewAnimationTest::onClick));
 	pButton1->setUserTag(1);
 	m_pLayout->addChild(pButton1);
 
@@ -344,7 +344,7 @@ bool CScrollViewAnimationTest::init()
 	CButton* pButton2 = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 	pButton2->getLabel()->initWithString("scrollToLeft", "", 28);
 	pButton2->setPosition(120, 400);
-	pButton2->setClickSelector(this, click_selector(CScrollViewAnimationTest::onClick));
+	pButton2->setOnClickListener(this, ccw_click_selector(CScrollViewAnimationTest::onClick));
 	pButton2->setUserTag(2);
 	m_pLayout->addChild(pButton2);
 
@@ -358,7 +358,7 @@ bool CScrollViewAnimationTest::init()
 	CButton* pButton3 = CButton::createWith9Sprite(CCSize(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 	pButton3->getLabel()->initWithString("scrollToRight", "", 28);
 	pButton3->setPosition(120, 320);
-	pButton3->setClickSelector(this, click_selector(CScrollViewAnimationTest::onClick));
+	pButton3->setOnClickListener(this, ccw_click_selector(CScrollViewAnimationTest::onClick));
 	pButton3->setUserTag(3);
 	m_pLayout->addChild(pButton3);
 
@@ -398,7 +398,7 @@ bool CScrollViewInsideScrollTest::init()
 	setDescription("Scroll view inside the other one");
 
 	CScrollView* pScroll = CScrollView::create(CCSize(480, 320));
-	pScroll->setBackgroundNode(CCSprite::create("background.png"));
+	pScroll->setBackgroundImage("background.png");
 	pScroll->setPosition(CCPoint(480, 320));
 	pScroll->setDirection(eScrollViewDirectionBoth);
 	m_pLayout->addChild(pScroll);
@@ -411,7 +411,7 @@ bool CScrollViewInsideScrollTest::init()
 
 	CScrollView* pScroll2 = CScrollView::create(CCSize(272, 76));
 	pScroll2->setDirection(eScrollViewDirectionHorizontal);
-	pScroll2->setBackgroundNode(CCSprite::create("background3.png"));
+	pScroll2->setBackgroundImage("background3.png");
 	pScroll2->setPosition(CCPoint(480 /2, 320 / 2));
 	pScroll->getContainer()->addChild(pScroll2);
 

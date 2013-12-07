@@ -23,7 +23,7 @@ public:
 	bool onTouchMoved(CCObject* pSender, CCTouch* pTouch, float fDuration);
 	bool onTouchEnded(CCObject* pSender, CCTouch* pTouch, float fDuration);
 	void onClick(CCObject* pSender);
-	bool onLongClick(CCObject* pSender);
+	bool onLongClick(CCObject* pSender, CCTouch* pTouch);
 	CLabel* pText3;
 };
 

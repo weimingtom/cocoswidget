@@ -21,7 +21,7 @@ class CGridViewBasicTest : public CGridViewTestSceneBase
 {
 public:
 	virtual bool init();
-	CGridViewCell* gridviewDataSource(CGridView* pTable, unsigned int idx);
+	CCObject* gridviewDataSource(CCObject* pConvertView, unsigned int idx);
 };
 
 //////////////////////////////////////////////////////

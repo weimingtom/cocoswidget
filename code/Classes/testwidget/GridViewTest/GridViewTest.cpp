@@ -31,18 +31,19 @@ bool CGridViewBasicTest::init()
 		CCSize(480, 320),
 		CCSize(480 / 5, 320 / 4),
 		96, this,
-		gridviewdatasource_selector(CGridViewBasicTest::gridviewDataSource));
+		ccw_datasource_adapter_selector(CGridViewBasicTest::gridviewDataSource));
 	pGridView->setColumns(5);
 	pGridView->setPosition(CCPoint(480, 320));
 	m_pLayout->addChild(pGridView);
+	pGridView->setAutoRelocate(true);
 	pGridView->reloadData();
 
 	return true;
 }
 
-CGridViewCell* CGridViewBasicTest::gridviewDataSource(CGridView* pTable, unsigned int idx)
+CCObject* CGridViewBasicTest::gridviewDataSource(CCObject* pConvertView, unsigned int idx)
 {
-	CGridViewCell* pCell = pTable->dequeueCell();
+	CGridViewCell* pCell = (CGridViewCell*) pConvertView;
 	CButton* pButton = NULL;
 
 	if(!pCell)

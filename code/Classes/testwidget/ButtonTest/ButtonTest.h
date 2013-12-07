@@ -51,8 +51,8 @@ class CButtonLongClickTest : public CButtonTestSceneBase
 public:
 	virtual bool init();
 	void onClick(CCObject* pSender);
-	bool onButton1LongClick(CCObject* pSender);
-	bool onButton2LongClick(CCObject* pSender);
+	bool onButton1LongClick(CCObject* pSender, CCTouch* pTouch);
+	bool onButton2LongClick(CCObject* pSender, CCTouch* pTouch);
 
 	void onLayoutTouchMovedAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);
 

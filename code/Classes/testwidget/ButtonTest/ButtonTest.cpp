@@ -39,10 +39,10 @@ bool CButtonEventTest::init()
 	setDescription("button events");
 
 	CButton* pButton1 = CButton::create("btn1_1.png", "btn1_2.png", "btn1_3.png");
-	pButton1->setTouchBeganSelector(this, touchbegan_selector(CButtonEventTest::onTouchBegan));
-	pButton1->setTouchMovedSelector(this, touch_selector(CButtonEventTest::onTouchMoved));
-	pButton1->setTouchEndedSelector(this, touch_selector(CButtonEventTest::onTouchEnded));
-	pButton1->setTouchCancelledSelector(this, touch_selector(CButtonEventTest::onTouchCancelled));
+	pButton1->setOnTouchBeganListener(this, ccw_touchbegan_selector(CButtonEventTest::onTouchBegan));
+	pButton1->setOnTouchMovedListener(this, ccw_touchevent_selector(CButtonEventTest::onTouchMoved));
+	pButton1->setOnTouchEndedListener(this, ccw_touchevent_selector(CButtonEventTest::onTouchEnded));
+	pButton1->setOnTouchCancelledListener(this, ccw_touchevent_selector(CButtonEventTest::onTouchCancelled));
 	pButton1->setPosition(CCPoint(350, 320));
 	m_pLayout->addChild(pButton1);
 
@@ -61,7 +61,7 @@ bool CButtonEventTest::init()
 	m_pLayout->addChild(m_pDurationText);
 
 	CButton* pButton2 = CButton::create("btn1_1.png", "btn1_2.png", "btn1_3.png");
-	pButton2->setClickSelector(this, click_selector(CButtonEventTest::onClick));
+	pButton2->setOnClickListener(this, ccw_click_selector(CButtonEventTest::onClick));
 	pButton2->setPosition(CCPoint(610, 320));
 	m_pLayout->addChild(pButton2);
 
@@ -123,8 +123,8 @@ bool CButtonLongClickTest::init()
 	setDescription("drag the 2s button after long click\n (the touch event will back to CCWidgetLayout after long click)");
 
 	CButton* pButton1 = CButton::create("btn1_1.png", "btn1_2.png", "btn1_3.png");
-	pButton1->setClickSelector(this, click_selector(CButtonLongClickTest::onClick));
-	pButton1->setLongClickSelector(this, longclick_selector(CButtonLongClickTest::onButton1LongClick));
+	pButton1->setOnClickListener(this, ccw_click_selector(CButtonLongClickTest::onClick));
+	pButton1->setOnLongClickListener(this, ccw_longclick_selector(CButtonLongClickTest::onButton1LongClick));
 	pButton1->setPosition(CCPoint(350, 320));
 	m_pLayout->addChild(pButton1);
 
@@ -135,7 +135,7 @@ bool CButtonLongClickTest::init()
 	m_pText1->setString("none");
 	m_pLayout->addChild(m_pText1);
 
-	m_pLayout->setTouchMovedAfterLongClickSelector(this, afterlongclick_selector(CButtonLongClickTest::onLayoutTouchMovedAfterLongClick));
+	m_pLayout->setOnTouchMovedAfterLongClickListener(this, afterlongclick_selector(CButtonLongClickTest::onLayoutTouchMovedAfterLongClick));
 
 	m_pText2 = CLabel::create();
 	m_pText2->setAnchorPoint(CCPoint(0, 0.5));
@@ -145,7 +145,7 @@ bool CButtonLongClickTest::init()
 	m_pLayout->addChild(m_pText2);
 
 	pButton2 = CButton::create("btn1_1.png", "btn1_2.png", "btn1_3.png");
-	pButton2->setLongClickSelector(this, longclick_selector(CButtonLongClickTest::onButton2LongClick));
+	pButton2->setOnLongClickListener(this, ccw_longclick_selector(CButtonLongClickTest::onButton2LongClick));
 	pButton2->setPosition(CCPoint(610, 320));
 	m_pLayout->addChild(pButton2);
 
@@ -157,14 +157,15 @@ void CButtonLongClickTest::onClick(CCObject* pSender)
 	m_pText1->setString("Clicked");
 }
 
-bool CButtonLongClickTest::onButton1LongClick(CCObject* pSender)
+bool CButtonLongClickTest::onButton1LongClick(CCObject* pSender, CCTouch* pTouch)
 {
 	m_pText1->setString("Long Clicked");
 	return false;
 }
 
-bool CButtonLongClickTest::onButton2LongClick(CCObject* pSender)
+bool CButtonLongClickTest::onButton2LongClick(CCObject* pSender, CCTouch* pTouch)
 {
+	pButton2->setPosition(m_pLayout->convertTouchToNodeSpace(pTouch));
 	return true;
 }
 
@@ -336,14 +337,14 @@ bool CButtonChangeSizeTest::init()
 	m_pButton->setNormalImage("sprite9_btn1.png");
 	m_pButton->setSelectedImage("sprite9_btn2.png");
 	m_pButton->getLabel()->initWithString("none", "", 30.0f);
-	m_pButton->updateCascadeTextContentSize(CCSize(50, 30));
+	m_pButton->updateCascadeLabelContentSize(CCSize(50, 30));
 	m_pButton->setPosition(CCPoint(480, 320));
 	m_pLayout->addChild(m_pButton);
 
 	CButton* pBtn = CButton::createWith9Sprite(CCSizeMake(150, 50), "sprite9_btn1.png", "sprite9_btn2.png");
 	pBtn->setPosition(CCPoint(250, 320));
 	pBtn->getLabel()->initWithString("click me", "", 27.0f);
-	pBtn->setClickSelector(this, click_selector(CButtonChangeSizeTest::onClick));
+	pBtn->setOnClickListener(this, ccw_click_selector(CButtonChangeSizeTest::onClick));
 	m_pLayout->addChild(pBtn);
 
 	return true;
@@ -355,7 +356,7 @@ void CButtonChangeSizeTest::onClick(CCObject* pSender)
 	{
 		string& str = m_lData.front();
 		m_pButton->getLabel()->setString(str.c_str());
-		m_pButton->updateCascadeTextContentSize(CCSize(50, 30));
+		m_pButton->updateCascadeLabelContentSize(CCSize(50, 30));
 		m_lData.pop_front();
 	}
 }

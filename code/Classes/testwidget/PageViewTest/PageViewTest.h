@@ -20,7 +20,7 @@ class CPageViewBasicTest : public CPageViewTestSceneBase
 public:
 	virtual bool init();
 	CLabel* m_pText;
-	CPageViewCell* pageviewDataSource(CPageView* pPage, unsigned int nPageIdx);
+	CCObject* pageviewDataSource(CCObject* pConvertCell, unsigned int nPageIdx);
 	void onPageChanged(CPageView* pPage, unsigned int nPageIndx);
 };
 
@@ -31,7 +31,7 @@ class CPageViewVerticalTest : public CPageViewTestSceneBase
 public:
 	virtual bool init();
 	CLabel* m_pText;
-	CPageViewCell* pageviewDataSource(CPageView* pPage, unsigned int nPageIdx);
+	CCObject* pageviewDataSource(CCObject* pConvertCell, unsigned int nPageIdx);
 	void onPageChanged(CPageView* pPage, unsigned int nPageIndx);
 };
 
