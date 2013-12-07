@@ -4,7 +4,9 @@
 #include "SimpleAudioEngine.h"
 #include "MenuScene.h"
 
+
 using namespace CocosDenshion;
+using namespace cocos2d::cocoswidget;
 
 USING_NS_CC;
 
@@ -29,7 +31,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 	MenuScene* pMenuScene = new MenuScene();
 	pMenuScene->init();
 	pMenuScene->autorelease();
-    pDirector->runWithScene(pMenuScene);
+	pDirector->runWithScene(pMenuScene);
 
     return true;
 }

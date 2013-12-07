@@ -16,7 +16,7 @@ public:
 
 private:
 	CTableView* m_pMenuTableView;
-	CTableViewCell* menuTableDataSource(CTableView* pTable, unsigned int idx);
+	CCObject* menuTableDataSource(CCObject* pConvertCell, unsigned int idx);
 	CWidgetTouchModel onTextTouchDown(CCObject* pSender, CCTouch* pTouch);
 	bool onTextTouchEnd(CCObject* pSender, CCTouch* pTouch, float fDuration);
 	bool onTextTouchCancelled(CCObject* pSender, CCTouch* pTouch, float fDuration);
