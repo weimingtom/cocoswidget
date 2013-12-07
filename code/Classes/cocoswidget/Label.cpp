@@ -30,7 +30,7 @@ NS_CC_WIDGET_BEGIN
 
 CLabel::CLabel()
 {
-	setWidgetNode(this);
+	setThisObject(this);
 	m_bTouchEnabled = false;
 }
 
@@ -89,18 +89,32 @@ CLabel* CLabel::create(const char *pString, const char *pFontName, float fFontSi
 	return NULL;
 }
 
-CWidgetTouchModel CLabel::onTouchBegan(CCTouch *pTouch)
+CWidgetTouchModel CLabel::onTouchBegan(CCTouch* pTouch)
 {
-    return eWidgetTouchTransient;
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN;
+
+	return eWidgetTouchTransient;
 }
 
-void CLabel::onTouchEnded(CCTouch *pTouch, float fDuration)
+void CLabel::onTouchMoved(CCTouch* pTouch, float fDuration)
 {
-	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
-	if( boundingBox().containsPoint(touchPointInView) )
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
+}
+
+void CLabel::onTouchEnded(CCTouch* pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED;
+
+	CCPoint tPoint = m_pParent->convertTouchToNodeSpace(pTouch);
+	if( boundingBox().containsPoint(tPoint) )
 	{
-		executeClick();
+		executeClickHandler(this);
 	}
+}
+
+void CLabel::onTouchCancelled(CCTouch* pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
 }
 
 NS_CC_WIDGET_END

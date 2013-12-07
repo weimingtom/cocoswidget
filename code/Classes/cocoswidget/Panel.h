@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "cocos2d.h"
 #include "WidgetMacros.h"
 #include "Widget.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
@@ -44,21 +45,13 @@ NS_CC_WIDGET_BEGIN
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 面板容器，具有把事件向下分发的功能
  */
-class CPanel : public CCNode, public CWidget
+class CPanel : public CCNodeRGBA, public CWidget
 {
 public:
 	CPanel();
 	virtual ~CPanel();
 	virtual bool init();
 	static CPanel* create();
-
-	/**
-	 * 名称 : collisionWithWidget()
-	 * 功能 : 检测点击到哪个控件
-	 * 输入 : tPoint - 点击的坐标
-	 * 输出 : 被点击的控件
-	 */
-	virtual CWidget* collisionWithWidget(const CCPoint& tPoint);
 
 	/**
 	 * 名称 : executeTouchBegan()
@@ -102,6 +95,11 @@ public:
 	 * 输出 : 
 	 */
     virtual void onTouchCancelled(CCTouch *pTouch, float fDuration);
+
+
+	virtual void setContentSize(const CCSize& tContentSize);
+
+	CC_WIDGET_BACKGROUND;
     
 protected:
 	/// 被选中的控件
@@ -116,7 +114,7 @@ protected:
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 带绘制颜色的面板容器
  */
-class CPanelColor : public CPanel, public CCRGBAProtocol, public CCBlendProtocol
+class CPanelColor : public CPanel, public CCBlendProtocol
 #ifdef EMSCRIPTEN
 , public CCGLBufferedNode
 #endif
@@ -154,11 +152,6 @@ public:
 
 protected:
 	ccBlendFunc m_tBlendFunc;
-
-protected:
-	GLubyte		_displayedOpacity, _realOpacity;
-	ccColor3B	_displayedColor, _realColor;
-	bool		_cascadeOpacityEnabled, _cascadeColorEnabled;
 
 protected:
     ccVertex2F m_pSquareVertices[4];

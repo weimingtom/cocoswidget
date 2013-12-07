@@ -30,7 +30,7 @@ NS_CC_WIDGET_BEGIN
 
 CLabelBMFont::CLabelBMFont()
 {
-	setWidgetNode(this);
+	setThisObject(this);
 	m_bTouchEnabled = false;
 }
 
@@ -41,16 +41,30 @@ CLabelBMFont::~CLabelBMFont()
 
 CWidgetTouchModel CLabelBMFont::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN
+
 	return eWidgetTouchTransient;
+}
+
+void CLabelBMFont::onTouchMoved(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
 }
 
 void CLabelBMFont::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED
+
 	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
 	if( boundingBox().containsPoint(touchPointInView) )
 	{
-		executeClick();
+		executeClickHandler(this);
 	}
+}
+
+void CLabelBMFont::onTouchCancelled(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
 }
 
 CLabelBMFont* CLabelBMFont::create()

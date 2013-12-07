@@ -29,10 +29,7 @@ THE SOFTWARE.
 
 /////////////////////////////////////////////////////////////////////////////
 /// BugFix : [1] fix wrong positions after set content size.
-/// Update : [1] changed function name "setTextOffset" to "setLabelOffset"
-/// Update : [2] changed function name "getTextTTF" to "getLabel"
-/// Update : [3] changed field name "m_pText" to "m_pLabel"
-/// Update : [4] changed text "9Sprite" to "Scale9" in this whole file
+///
 /////////////////////////////////////////////////////////////////////////////
 
 #include "cocos2d.h"
@@ -40,6 +37,7 @@ THE SOFTWARE.
 #include "Widget.h"
 #include "Scale9Sprite.h"
 #include "Label.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
@@ -49,7 +47,7 @@ NS_CC_WIDGET_BEGIN
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 按钮控件，可以设置3种状态
  */
-class CButton : public CCNodeRGBA, public CWidget
+class CButton : public CCNodeRGBA, public CWidget, public CClickableProtocol, public CLongClickableProtocol
 {
 public:
 	CButton();
@@ -137,18 +135,24 @@ public:
 	 * 输入 : tOffsetSize - 按钮比文字大多少
 	 * 输出 : 
 	 */
-	virtual void updateCascadeTextContentSize(const CCSize& tOffsetSize);
-	virtual void updateCascadeTextContentSize();
-	
-	virtual void setNormalSpriteFrame(CCSpriteFrame* pFrame);
-	virtual void setSelectedSpriteFrame(CCSpriteFrame* pFrame);
-	virtual void setDisabledSpriteFrame(CCSpriteFrame* pFrame);
+	virtual void updateCascadeLabelContentSize(const CCSize& tOffsetSize = CCSizeZero);
+
 	virtual void setNormalImage(const char* pFile);
 	virtual void setSelectedImage(const char* pFile);
-	virtual void setDisabledTexture(const char* pFile);
+	virtual void setDisabledImage(const char* pFile);
+
 	virtual void setNormalTexture(CCTexture2D *pTexture);
 	virtual void setSelectedTexture(CCTexture2D *pTexture);
 	virtual void setDisabledTexture(CCTexture2D *pTexture);
+	
+	virtual void setNormalSpriteFrameName(const char* pSpriteName);
+	virtual void setSelectedSpriteFrameName(const char* pSpriteName);
+	virtual void setDisabledSpriteFrameName(const char* pSpriteName);
+
+	virtual void setNormalSpriteFrame(CCSpriteFrame* pFrame);
+	virtual void setSelectedSpriteFrame(CCSpriteFrame* pFrame);
+	virtual void setDisabledSpriteFrame(CCSpriteFrame* pFrame);
+
 	virtual CCNode* getNormalImage();
 	virtual CCNode* getSelectedImage();
 	virtual CCNode* getDisabledImage();
@@ -157,7 +161,7 @@ public:
 	static CButton* create(const char* pNormal, const char* pSelected = NULL, const char* pDisabled = NULL);
 	static CButton* createWith9Sprite(const CCSize& tSize, const char* pNormal, const char* pSelected = NULL, const char* pDisabled = NULL);
 
-	WIDGET_CHILDE_SCHEDULE(CButton);
+	CC_WIDGET_LONGCLICK_SCHEDULE(CButton);
 
 protected:
 	/// 正常状态的图像

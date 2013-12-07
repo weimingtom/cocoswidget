@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "cocos2d.h"
 #include "WidgetMacros.h"
 #include "Widget.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
@@ -44,27 +45,18 @@ NS_CC_WIDGET_BEGIN
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 可接收触摸事件的精灵
  */
-class CImageView : public CCSprite, public CWidget
+class CImageView : public CCSprite
+, public CWidget
+, public CClickableProtocol
+, public CLongClickableProtocol
 {
 public:
 	CImageView();
 
-	/**
-	 * 名称 : onTouchBegan()
-	 * 功能 : 改变返回值为 暂时性处理事件
-	 * 输入 : 
-	 * 输出 : eWidgetTouchTransient
-	 */
 	virtual CWidgetTouchModel onTouchBegan(CCTouch *pTouch);
-
-	/**
-	 * 名称 : onTouchEnded()
-	 * 功能 : 触摸结束时调用
-	 * 输入 : pTouch - 触摸信息
-	 *        fDuration - 触摸开始后距现在经过的时间
-	 * 输出 : 判断是否执行Click
-	 */
+	virtual void onTouchMoved(CCTouch *pTouch, float fDuration);
 	virtual void onTouchEnded(CCTouch *pTouch, float fDuration);
+	virtual void onTouchCancelled(CCTouch *pTouch, float fDuration);
 
 	static CImageView* create();
 	static CImageView* create(const char *pszFileName);
@@ -74,7 +66,7 @@ public:
 	static CImageView* createWithSpriteFrame(CCSpriteFrame *pSpriteFrame);
 	static CImageView* createWithSpriteFrameName(const char *pszSpriteFrameName);
 
-	WIDGET_CHILDE_SCHEDULE(CImageView);
+	CC_WIDGET_LONGCLICK_SCHEDULE(CImageView);
 };
 
 NS_CC_WIDGET_END

@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "WidgetMacros.h"
 #include "Widget.h"
 #include "ScrollView.h"
+#include "WidgetProtocol.h"
 #include <list>
 #include <vector>
 
@@ -43,16 +44,6 @@ NS_CC_WIDGET_BEGIN
 
 class CGridView;
 class CGridViewCell;
-
-/**
- * 名称 : SEL_GridViewDataSourceHandler
- * 功能 : 网格控件的数据项外部回调函数
- * 输入 : pGrid - 本网格控件
- *        idx - 目前正在处理第几个网格项
- * 输出 : 网格项
- */
-typedef CGridViewCell* (CCObject::*SEL_GridViewDataSourceHandler)(CGridView* pGrid, unsigned int idx);
-#define gridviewdatasource_selector(__SELECTOR__) (cocos2d::cocoswidget::SEL_GridViewDataSourceHandler)(&__SELECTOR__)
 
 /**
  * 类名 : CGridViewCell
@@ -119,7 +110,7 @@ protected:
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 实现的网格控件，只能有垂直滚动状态
  */
-class CGridView : public CScrollView
+class CGridView : public CScrollView, public CDataSourceAdapterProtocol
 {
 public:
 	CGridView();
@@ -197,21 +188,13 @@ public:
 	 */
 	void setAutoRelocate(bool bAuto);
 
-	/**
-	 * 名称 : setDataSourceSelector()
-	 * 功能 : 设置网格控件的数据外部回调函数
-	 * 输入 : pTarget - 处理对象
-	 *        pDataSourceHandler - 处理函数
-	 * 输出 : 
-	 */
-	void setDataSourceSelector(CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler);
 
 	static CGridView* create(const CCSize& tViewSize);
 	static CGridView* create(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount,
-		CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler);
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler);
 
 	bool initWithParams(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount,
-		CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler);
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler);
 
 public:
 	/**
@@ -247,14 +230,6 @@ public:
 	void reloadData();
 
 protected:
-	/**
-	 * 名称 : executeDataSource()
-	 * 功能 : 执行外部数据函数
-	 * 输入 : pGrid - 本控件
-	 *        idx - 当前处理的列表项下标
-	 * 输出 : 网格项
-	 */
-	CGridViewCell* executeDataSource(CGridView* pGrid, unsigned int idx);
 
 	/**
 	 * 名称 : onScrolling()
@@ -303,9 +278,6 @@ protected:
 	std::list<CGridViewCell*> m_lCellsUsed;
 	std::list<CGridViewCell*> m_lCellsFreed;
 	std::vector<CCPoint> m_vPositions;
-
-	SEL_GridViewDataSourceHandler m_pDataSourceHandler;
-	CCObject* m_pDataSourceListener;
 };
 
 NS_CC_WIDGET_END

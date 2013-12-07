@@ -44,7 +44,9 @@ CButton::CButton()
 , m_tTextOffset(CCPointZero)
 , m_pLabel(NULL)
 {
-	setWidgetNode(this);
+	setThisObject(this);
+	setCascadeColorEnabled(true);
+	setCascadeOpacityEnabled(true);
 }
 
 CButton::~CButton()
@@ -98,83 +100,41 @@ bool CButton::init()
 
 bool CButton::initWith9Sprite(const CCSize& tSize, const char* pNormal, const char* pSelected, const char* pDisabled)
 {
-	if( !init() || !pNormal )
+	if( !pNormal || !strlen(pNormal) || !init()  )
 	{
 		return false;
 	}
+
 	setScale9Enabled(true);
 	setContentSize(tSize);
-
-	m_pNormalImage = CScale9Sprite::create(pNormal);
-	m_pNormalImage->setContentSize(tSize);
-	m_pNormalImage->setPosition(CCPoint(tSize.width/2, tSize.height/2));
-	addChild(m_pNormalImage);
-
-	if( pSelected && strlen(pSelected) )
-	{
-		m_pSelectedImage = CScale9Sprite::create(pSelected);
-		m_pSelectedImage->setContentSize(tSize);
-		m_pSelectedImage->setPosition(CCPoint(tSize.width/2, tSize.height/2));
-		m_pSelectedImage->setVisible(false);
-		addChild(m_pSelectedImage);
-	}
-
-	if( pDisabled && strlen(pDisabled) )
-	{
-		m_pDisabledImage = CScale9Sprite::create(pDisabled);
-		m_pDisabledImage->setContentSize(tSize);
-		m_pDisabledImage->setPosition(CCPoint(tSize.width/2, tSize.height/2));
-		m_pDisabledImage->setVisible(false);
-		addChild(m_pDisabledImage);
-	}
+	setNormalImage(pNormal);
+	setSelectedImage(pSelected);
+	setDisabledImage(pDisabled);
 
 	return true;
 }
 
 bool CButton::initWithFile(const char* pNormal, const char* pSelected, const char* pDisabled)
 {
-	if( !init() || !pNormal || strlen(pNormal) == 0 )
+	if( !pNormal || !strlen(pNormal) || !init() )
 	{
 		return false;
 	}
+
 	setScale9Enabled(false);
-
-	m_pNormalImage = CCSprite::create(pNormal);
-	setContentSize(m_pNormalImage->getContentSize());
-	m_pNormalImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-	addChild(m_pNormalImage);
-
-	if( pSelected && strlen(pSelected) )
-	{
-		m_pSelectedImage = CCSprite::create(pSelected);
-		m_pSelectedImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-		m_pSelectedImage->setVisible(false);
-		addChild(m_pSelectedImage);
-	}
-
-	if( pDisabled && strlen(pDisabled) )
-	{
-		m_pDisabledImage = CCSprite::create(pDisabled);
-		m_pDisabledImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-		m_pDisabledImage->setVisible(false);
-		addChild(m_pDisabledImage);
-	}
+	setNormalImage(pNormal);
+	setSelectedImage(pSelected);
+	setDisabledImage(pDisabled);
 
 	return true;
 }
 
-void CButton::updateCascadeTextContentSize()
-{
-	updateCascadeTextContentSize(CCSizeZero);
-}
-
-void CButton::updateCascadeTextContentSize(const CCSize& tOffsetSize)
+void CButton::updateCascadeLabelContentSize(const CCSize& tOffsetSize)
 {
 	if( m_bScale9Enabled && m_pLabel )
 	{
 		const CCSize& tTextSize = m_pLabel->getContentSize();
-		const CCSize tConSize = tTextSize + tOffsetSize;
-		setContentSize(tConSize);
+		setContentSize(tTextSize + tOffsetSize);
 	}
 }
 
@@ -294,41 +254,8 @@ void CButton::setNormalImage(const char* pFile)
 {
 	if( pFile && strlen(pFile) )
 	{
-		if( m_pNormalImage )
-		{
-			if( m_bScale9Enabled )
-			{
-				CScale9Sprite* pImage = (CScale9Sprite*) m_pNormalImage;
-				pImage->initWithFile(pFile);
-				pImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
-				CCRect rect = CCRectZero;
-				rect.size = pTexture->getContentSize();
-				CCSprite* pImage = (CCSprite*) m_pNormalImage;
-				pImage->setTexture(pTexture);
-				pImage->setTextureRect(rect);
-				setContentSize(pTexture->getContentSize());
-			}
-		}
-		else
-		{
-			if( m_bScale9Enabled )
-			{
-				m_pNormalImage = CScale9Sprite::create(pFile);
-				m_pNormalImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				m_pNormalImage = CCSprite::create(pFile);
-				setContentSize(m_pNormalImage->getContentSize());
-			}
-
-			m_pNormalImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-			addChild(m_pNormalImage);
-		}
+		CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
+		setNormalTexture(pTexture);
 	}
 }
 
@@ -336,81 +263,17 @@ void CButton::setSelectedImage(const char* pFile)
 {
 	if( pFile && strlen(pFile) )
 	{
-		if( m_pSelectedImage )
-		{
-			if( m_bScale9Enabled )
-			{
-				CScale9Sprite* pImage = (CScale9Sprite*) m_pSelectedImage;
-				pImage->initWithFile(pFile);
-				pImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
-				CCRect rect = CCRectZero;
-				rect.size = pTexture->getContentSize();
-				CCSprite* pImage = (CCSprite*) m_pSelectedImage;
-				pImage->setTexture(pTexture);
-				pImage->setTextureRect(rect);
-			}
-		}
-		else
-		{
-			if( m_bScale9Enabled )
-			{
-				m_pSelectedImage = CScale9Sprite::create(pFile);
-				m_pSelectedImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				m_pSelectedImage = CCSprite::create(pFile);
-			}
-
-			m_pSelectedImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-			m_pSelectedImage->setVisible(false);
-			addChild(m_pSelectedImage);
-		}
+		CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
+		setSelectedTexture(pTexture);
 	}
 }
 
-void CButton::setDisabledTexture(const char* pFile)
+void CButton::setDisabledImage(const char* pFile)
 {
 	if( pFile && strlen(pFile) )
 	{
-		if( m_pDisabledImage )
-		{
-			if( m_bScale9Enabled )
-			{
-				CScale9Sprite* pImage = (CScale9Sprite*) m_pDisabledImage;
-				pImage->initWithFile(pFile);
-				pImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
-				CCRect rect = CCRectZero;
-				rect.size = pTexture->getContentSize();
-				CCSprite* pImage = (CCSprite*) m_pDisabledImage;
-				pImage->setTexture(pTexture);
-				pImage->setTextureRect(rect);
-			}
-		}
-		else
-		{
-			if( m_bScale9Enabled )
-			{
-				m_pDisabledImage = CScale9Sprite::create(pFile);
-				m_pDisabledImage->setContentSize(m_obContentSize);
-			}
-			else
-			{
-				m_pDisabledImage = CCSprite::create(pFile);
-			}
-
-			m_pDisabledImage->setPosition(CCPoint(m_obContentSize.width/2, m_obContentSize.height/2));
-			m_pDisabledImage->setVisible(false);
-			addChild(m_pDisabledImage);
-		}
+		CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(pFile);
+		setDisabledTexture(pTexture);
 	}
 }
 
@@ -544,6 +407,45 @@ void CButton::setDisabledTexture(CCTexture2D *pTexture)
 	}
 }
 
+void CButton::setNormalSpriteFrameName(const char* pSpriteName)
+{
+	CCSpriteFrame *pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(pSpriteName);
+
+#if COCOS2D_DEBUG > 0
+	char msg[256] = {0};
+	sprintf(msg, "Invalid spriteFrameName: %s", pSpriteName);
+	CCAssert(pFrame != NULL, msg);
+#endif
+
+	return setNormalSpriteFrame(pFrame);
+}
+
+void CButton::setSelectedSpriteFrameName(const char* pSpriteName)
+{
+	CCSpriteFrame *pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(pSpriteName);
+
+#if COCOS2D_DEBUG > 0
+	char msg[256] = {0};
+	sprintf(msg, "Invalid spriteFrameName: %s", pSpriteName);
+	CCAssert(pFrame != NULL, msg);
+#endif
+
+	return setSelectedSpriteFrame(pFrame);
+}
+
+void CButton::setDisabledSpriteFrameName(const char* pSpriteName)
+{
+	CCSpriteFrame *pFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(pSpriteName);
+
+#if COCOS2D_DEBUG > 0
+	char msg[256] = {0};
+	sprintf(msg, "Invalid spriteFrameName: %s", pSpriteName);
+	CCAssert(pFrame != NULL, msg);
+#endif
+
+	return setDisabledSpriteFrame(pFrame);
+}
+
 CCNode* CButton::getNormalImage()
 {
 	return m_pNormalImage;
@@ -567,32 +469,32 @@ void CButton::setContentSize(const CCSize& contentSize)
 	{
 		if( CC_IS_9SPRITE(m_pNormalImage) )
 		{
-			m_pNormalImage->setContentSize(contentSize);
+			m_pNormalImage->setContentSize(m_obContentSize);
 		}
-		m_pNormalImage->setPosition(CC_CENTER_POS(contentSize));
+		m_pNormalImage->setPosition(CC_CENTER_POS(m_obContentSize));
 	}
 
 	if( m_pSelectedImage )
 	{
 		if( CC_IS_9SPRITE(m_pSelectedImage) )
 		{
-			m_pSelectedImage->setContentSize(contentSize);
+			m_pSelectedImage->setContentSize(m_obContentSize);
 		}
-		m_pSelectedImage->setPosition(CC_CENTER_POS(contentSize));
+		m_pSelectedImage->setPosition(CC_CENTER_POS(m_obContentSize));
 	}
 
 	if( m_pDisabledImage )
 	{
 		if( CC_IS_9SPRITE(m_pDisabledImage) )
 		{
-			m_pDisabledImage->setContentSize(contentSize);
+			m_pDisabledImage->setContentSize(m_obContentSize);
 		}
-		m_pDisabledImage->setPosition(CC_CENTER_POS(contentSize));
+		m_pDisabledImage->setPosition(CC_CENTER_POS(m_obContentSize));
 	}
 
 	if( m_pLabel )
 	{
-		m_pLabel->setPosition(CC_CENTER_POS(contentSize) + m_tTextOffset);
+		m_pLabel->setPosition(CC_CENTER_POS(m_obContentSize) + m_tTextOffset);
 	}
 }
 
@@ -671,6 +573,8 @@ void CButton::setLabelOffset(const CCPoint& tOffset)
 
 CWidgetTouchModel CButton::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN;
+
 	if( m_pSelectedImage )
 	{
 		CC_SAFE_SET_VISIBLE(m_pNormalImage, false);
@@ -682,6 +586,8 @@ CWidgetTouchModel CButton::onTouchBegan(CCTouch *pTouch)
 
 void CButton::onTouchMoved(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
+
 	if( m_pSelectedImage )
 	{
 		CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
@@ -700,6 +606,8 @@ void CButton::onTouchMoved(CCTouch *pTouch, float fDuration)
 
 void CButton::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED;
+
 	if( m_pSelectedImage )
 	{
 		CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
@@ -707,7 +615,7 @@ void CButton::onTouchEnded(CCTouch *pTouch, float fDuration)
 		{
 			CC_SAFE_SET_VISIBLE(m_pNormalImage, true);
 			m_pSelectedImage->setVisible(false);
-			executeClick();
+			executeClickHandler(this);
 		}
 		else
 		{
@@ -721,7 +629,7 @@ void CButton::onTouchEnded(CCTouch *pTouch, float fDuration)
 		if( boundingBox().containsPoint(touchPointInView) )
 		{
 			CC_SAFE_SET_VISIBLE(m_pNormalImage, true);
-			executeClick();
+			executeClickHandler(this);
 		}
 		CC_SAFE_SET_VISIBLE(m_pNormalImage, true);
 	}
@@ -729,6 +637,8 @@ void CButton::onTouchEnded(CCTouch *pTouch, float fDuration)
 
 void CButton::onTouchCancelled(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
+
 	CC_SAFE_SET_VISIBLE(m_pNormalImage, true);
 	CC_SAFE_SET_VISIBLE(m_pSelectedImage, false);
 }

@@ -24,15 +24,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-#ifndef __CCWIDGET_PAGEVIEW_H__
-#define __CCWIDGET_PAGEVIEW_H__
+#ifndef __CCWIDGET_GRIDPAGEVIEW_H__
+#define __CCWIDGET_GRIDPAGEVIEW_H__
 
 /////////////////////////////////////////////////////////////////////////////
 /// BugFix : [1]
-/// Update : [1] changed text "SEL_PageDataSourceHandler" to "SEL_PageViewDataSourceHandler"
-/// Update : [2] changed text "SEL_PageChangedHandler" to "SEL_PageViewChangedHandler"
-/// Update : [3] changed text "pagedatasource_selector" to "pageviewdatasource_selector"
-/// Update : [4] changed text "pagechanged_selector" to "pageviewchanged_selector"
+/// Update : [1] changed text "SEL_TableGridViewDataSourceHandler" to 
+///              "SEL_TableGridViewDataSourceHandler"
+/// Update : [2] changed text "tablegirddatasource_selector" to
+///              "tablegirdviewdatasource_selector"
 /////////////////////////////////////////////////////////////////////////////
 
 #include "cocos2d.h"
@@ -40,43 +40,83 @@ THE SOFTWARE.
 #include "Widget.h"
 #include "TableView.h"
 #include "WidgetProtocol.h"
+#include <vector>
 
 NS_CC_WIDGET_BEGIN
 
-class CPageView;
-class CPageViewCell;
+class CGridPageView;
+class CGridPageViewCell;
+class CGridPageViewPage;
 
-/**
- * 类名 : CPageViewCell
- * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
- * 邮箱 : csdn_viva@foxmail.com
- * 功能 : 网格项定义，继承自列表项
- */
-class CPageViewCell : public CTableViewCell
+class CGridPageViewPage : public CTableViewCell
 {
 public:
-	CPageViewCell(){};
+	CGridPageViewPage();
+	virtual ~CGridPageViewPage();
+	CCArray* getGirdCells();
+
+protected:
+	/// 网格列表项的集合
+	CCArray* m_pGirdCells;
 };
 
 /**
- * 类名 : CPageView
+ * 类名 : CGridPageViewCell
  * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
  * 邮箱 : csdn_viva@foxmail.com
- * 功能 : 滑动页面控件
+ * 功能 : 网格列表项
  */
-class CPageView : public CTableView, public CPageChangeableProtocol
+class CGridPageViewCell : public CTableViewCell
 {
 public:
-	CPageView();
-	static CPageView* create(const CCSize& tPageSize);
-	static CPageView* create(const CCSize& tPageSize, unsigned int uPageCount,
+	CGridPageViewCell();
+	virtual ~CGridPageViewCell();
+};
+
+/**
+ * 类名 : CGridPageView
+ * 作者 : Xi'an-Lijunlin csdn_viva@foxmail.com
+ * 邮箱 : csdn_viva@foxmail.com
+ * 功能 : 网格列表控件
+ */
+class CGridPageView : public CTableView, public CPageChangeableProtocol
+{
+public:
+	CGridPageView();
+	virtual ~CGridPageView();
+
+	static CGridPageView* create(const CCSize& tViewSize);
+	static CGridPageView* create(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount, 
 		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler);
+
+public:
+	void setCountOfCell(unsigned int uCellsCount);
+    unsigned int getCountOfCell() const;
+    void setSizeOfCell(const CCSize& tCellsSize);
+    const CCSize& getSizeOfCell() const;
+	void setRows(unsigned int uRows);
+	unsigned int getRows() const;
+	void setColumns(unsigned int uColumns);
+	unsigned int getColumns() const;
+	void reloadData();
 
 protected:
 	virtual void onScrolling();
+	void updateGridCellsPosition();
+	void updatePageCount();
 	virtual void updateCellAtIndex(unsigned int idx);
+
+protected:
+	CCSize m_tGridCellsSize;
+	unsigned int m_uGridCellsCount;
+	unsigned int m_uColumns;
+	unsigned int m_uRows;
+	unsigned int m_uCellsMaxCountInPage;
+
+	std::vector<CCPoint> m_vGridCellsPosition;
 };
+
 
 NS_CC_WIDGET_END
 
-#endif //__CCWIDGET_PAGEVIEW_H__
+#endif //__CCWIDGET_GRIDPAGEVIEW_H__

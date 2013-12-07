@@ -48,11 +48,8 @@ CGridView::CGridView()
 , m_uCellsCount(0)
 , m_uColumns(0)
 , m_uRows(0)
-, m_pDataSourceListener(NULL)
-, m_pDataSourceHandler(NULL)
 , m_bAutoRelocate(false)
 {
-	setTouchEnabled(false);
 	m_eDirection = eScrollViewDirectionVertical;
 }
 
@@ -106,24 +103,6 @@ void CGridView::setAutoRelocate(bool bAuto)
 	m_bAutoRelocate = bAuto;
 }
 
-void CGridView::setDataSourceSelector(CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler)
-{
-	if( pTarget && pDataSourceHandler )
-	{
-		m_pDataSourceListener = pTarget;
-		m_pDataSourceHandler = pDataSourceHandler;
-	}
-}
-
-CGridViewCell* CGridView::executeDataSource(CGridView* pGrid, unsigned int idx)
-{
-	if( m_pDataSourceListener && m_pDataSourceHandler )
-	{
-		return (m_pDataSourceListener->*m_pDataSourceHandler)(pGrid, idx);
-	}
-	return NULL;
-}
-
 CGridView* CGridView::create(const CCSize& tViewSize)
 {
 	CGridView * pRet = new CGridView();
@@ -137,10 +116,10 @@ CGridView* CGridView::create(const CCSize& tViewSize)
 }
 
 CGridView* CGridView::create(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount,
-		CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler)
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler)
 {
 	CGridView * pRet = new CGridView();
-	if( pRet && pRet->initWithParams(tViewSize, tCellSize, uCellCount, pTarget, pDataSourceHandler))
+	if( pRet && pRet->initWithParams(tViewSize, tCellSize, uCellCount, pListener, pHandler))
     {
 		pRet->autorelease();
 		return pRet;
@@ -150,13 +129,13 @@ CGridView* CGridView::create(const CCSize& tViewSize, const CCSize& tCellSize, u
 }
 
 bool CGridView::initWithParams(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount,
-		CCObject* pTarget, SEL_GridViewDataSourceHandler pDataSourceHandler)
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler)
 {
 	if( initWithSize(tViewSize) )
 	{
 		setSizeOfCell(tCellSize);
 		setCountOfCell(uCellCount);
-		setDataSourceSelector(pTarget, pDataSourceHandler);
+		setDataSourceAdapter(pListener, pHandler);
 		return true;
 	}
 	return false;
@@ -223,9 +202,12 @@ const CCPoint& CGridView::cellPositionFromIndex(unsigned int idx)
 
 void CGridView::updateCellAtIndex(unsigned int idx, unsigned int row)
 {
-	CGridViewCell* pCell = executeDataSource(this, idx);
-#if 0
-    CCAssert(pCell != NULL, "cell can not be null");
+	if( m_uCellsCount == 0 )
+		return;
+
+	CGridViewCell* pCell = (CGridViewCell*) executeDataSourceAdapterHandler(dequeueCell(), idx);
+#if 1
+    CCAssert(pCell != NULL, "cell can not be nil");
 #endif
 
 	pCell->setIdx(idx);
@@ -271,6 +253,9 @@ unsigned int CGridView::cellFirstIndexFromRow(unsigned int row)
 
 void CGridView::updatePositions()
 {
+	if( m_uCellsCount == 0 )
+		return;
+
 	m_uRows = m_uCellsCount % m_uColumns == 0 ? m_uCellsCount / m_uColumns : m_uCellsCount / m_uColumns + 1;
 	float fHeight = MAX(m_uRows * m_tCellsSize.height, m_obContentSize.height);
 	float fWidth = m_uColumns * m_tCellsSize.width;
@@ -354,30 +339,10 @@ CGridViewCell* CGridView::dequeueCell()
 
 void CGridView::reloadData()
 {
-	if( !m_pDataSourceListener || !m_pDataSourceHandler )
-	{
-		return;
-	}
-
-	if( m_eDirection != eScrollViewDirectionVertical )
-	{
-		return;
-	}
-
-	if( m_uColumns == 0 )
-	{
-		return;
-	}
-
-	if( m_uCellsCount == 0 )
-	{
-		return;
-	}
-
-	if( m_tCellsSize.width == 0 || m_tCellsSize.height == 0 )
-    {
-        return;
-    }
+	CCAssert(m_pDataSourceAdapterListener && m_pDataSourceAdapterHandler, "reloadData");
+	CCAssert((int)m_tCellsSize.width != 0 && (int)m_tCellsSize.height != 0, "reloadData");
+    CCAssert(m_eDirection == eScrollViewDirectionVertical, "reloadData");
+	CCAssert(m_uColumns != 0, "reloadData");
 
 	list<CGridViewCell*>::iterator iter = m_lCellsUsed.begin();
 	while(iter != m_lCellsUsed.end())
@@ -388,7 +353,6 @@ void CGridView::reloadData()
 		m_pContainer->removeChild(pCell, true);
 	}
 
-	setTouchEnabled(true);
 	m_sIndices.clear();
     m_vPositions.clear();
 	this->updatePositions();
@@ -471,6 +435,9 @@ void CGridView::onDeaccelerateScrollEnded()
 
 void CGridView::onDraggingScrollEnded()
 {
+	if( m_uCellsCount == 0 )
+		return;
+
 	if( m_bAutoRelocate )
 	{
 		CCPoint tOffset = getContentOffset();

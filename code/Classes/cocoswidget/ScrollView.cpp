@@ -67,8 +67,6 @@ CScrollView::CScrollView()
 , m_tMinOffset(CCPointZero)
 , m_bDeaccelerateScrolling(false)
 , m_bAnimatedScrolling(false)
-, m_pScrollListener(NULL)
-, m_pScrollHandler(NULL)
 {
 	m_pContainer = new CScrollViewContainer();
 	m_pContainer->init();
@@ -150,23 +148,24 @@ bool CScrollView::initWithSize(const CCSize& tSize)
 	return false;
 }
 
-CWidget* CScrollView::collisionWithWidget(const CCPoint& tPoint)
-{
-    if( m_pContainer->boundingBox().containsPoint(tPoint) )
-    {
-        return m_pContainer;
-    }
-    return NULL;
-}
+
 
 CWidgetTouchModel CScrollView::onTouchBegan(CCTouch *pTouch)
 {
     CCPoint tNodePoint = convertToNodeSpace(pTouch->getLocation());
-    m_pSelectedWidget = collisionWithWidget(tNodePoint);
+
+	if( m_pContainer->boundingBox().containsPoint(tNodePoint) )
+    {
+		m_pSelectedWidget = m_pContainer;
+    }
+	else
+	{
+		 m_pSelectedWidget = NULL;
+	}
     
     if( m_pSelectedWidget )
     {
-		m_eChildTouchModel = m_pSelectedWidget->executeTouchBegan(pTouch);
+		m_eChildTouchModel = m_pSelectedWidget->executeTouchBeganHandler(pTouch);
         if( m_eChildTouchModel == eWidgetTouchNone )
         {
            m_pSelectedWidget = NULL;
@@ -198,7 +197,7 @@ void CScrollView::onTouchMoved(CCTouch *pTouch, float fDuration)
             
             if ( !m_bTouchMoved && fabs(ccScrollconvertPointToInch(fDistance)) < CSCROLLVIEW_MOVE_INCH )
             {
-                m_pSelectedWidget->executeTouchMoved(pTouch, fDuration);
+                m_pSelectedWidget->executeTouchMovedHandler(pTouch, fDuration);
                 return;
             }
             
@@ -208,7 +207,7 @@ void CScrollView::onTouchMoved(CCTouch *pTouch, float fDuration)
         
         if( !m_pSelectedWidget->isTouchInterrupted() )
         {
-            m_pSelectedWidget->executeTouchMoved(pTouch, fDuration);
+            m_pSelectedWidget->executeTouchMovedHandler(pTouch, fDuration);
             
             if( !m_pSelectedWidget->isTouchInterrupted() )
             {
@@ -251,7 +250,7 @@ void CScrollView::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
     if( m_pSelectedWidget && !m_pSelectedWidget->isTouchInterrupted() )
     {
-        m_pSelectedWidget->executeTouchEnded(pTouch, fDuration);
+        m_pSelectedWidget->executeTouchEndedHandler(pTouch, fDuration);
         return;
     }
 	
@@ -293,7 +292,7 @@ void CScrollView::onTouchCancelled(CCTouch *pTouch, float fDuration)
 {
     if( m_pSelectedWidget && !m_pSelectedWidget->isTouchInterrupted() )
     {
-        m_pSelectedWidget->executeTouchCancelled(pTouch, fDuration);
+        m_pSelectedWidget->executeTouchCancelledHandler(pTouch, fDuration);
     }
     
     m_bTouchMoved = false;
@@ -338,23 +337,6 @@ bool CScrollView::isDragable()
 bool CScrollView::isTouchMoved() 
 {
 	return m_bTouchMoved; 
-}
-
-void CScrollView::setScrollViewSelector(CCObject* pTarget, SEL_ScrollViewHandler pHandler)
-{
-	if( pTarget && pHandler )
-	{
-		m_pScrollListener = pTarget;
-		m_pScrollHandler = pHandler;
-	}
-}
-
-void CScrollView::executeScroll()
-{
-	if( m_pScrollHandler && m_pScrollListener )
-	{
-		(m_pScrollListener->*m_pScrollHandler)(this);
-	}
 }
 
 void CScrollView::stopContainerAnimation()
@@ -495,7 +477,7 @@ void CScrollView::performedAnimatedScrolling(float dt)
         return;
     }
     this->onScrolling();
-	this->executeScroll();
+	this->executeScrollingHandler(this);
 }
 
 void CScrollView::stoppedAnimatedScroll()
@@ -506,7 +488,7 @@ void CScrollView::stoppedAnimatedScroll()
 		m_bAnimatedScrolling = false;
 
 		this->onScrolling();
-		this->executeScroll();
+		this->executeScrollingHandler(this);
 	}
 }
 
@@ -579,7 +561,7 @@ void CScrollView::setContentOffsetWithoutCheck(const CCPoint& tOffset)
 {
 	m_pContainer->setPosition(tOffset);
 	this->onScrolling();
-	this->executeScroll();
+	this->executeScrollingHandler(this);
 }
 
 void CScrollView::setContentOffset(CCPoint tOffset)
@@ -590,7 +572,7 @@ void CScrollView::setContentOffset(CCPoint tOffset)
 	}
 	m_pContainer->setPosition(tOffset);
     this->onScrolling();
-	this->executeScroll();
+	this->executeScrollingHandler(this);
 }
 
 void CScrollView::setContentOffsetInDurationWithoutCheck(const CCPoint& tOffset, float fDuration)
@@ -605,7 +587,7 @@ void CScrollView::setContentOffsetInDurationWithoutCheck(const CCPoint& tOffset,
 
 	perpareAnimatedScroll();
 	this->onScrolling();
-	this->executeScroll();
+	this->executeScrollingHandler(this);
 }
 
 void CScrollView::setContentOffsetInDuration(CCPoint tOffset, float fDuration)
@@ -632,7 +614,7 @@ void CScrollView::setContentOffsetEaseInWithoutCheck(const CCPoint& tOffset, flo
 
 	perpareAnimatedScroll();
 	this->onScrolling();
-	this->executeScroll();
+	this->executeScrollingHandler(this);
 }
 
 void CScrollView::setContentOffsetEaseIn(CCPoint tOffset, float fDuration, float fRate)

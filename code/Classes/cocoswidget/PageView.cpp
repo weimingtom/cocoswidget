@@ -29,15 +29,9 @@ THE SOFTWARE.
 NS_CC_WIDGET_BEGIN
 
 CPageView::CPageView()
-: m_nPageIndex(0)
-, m_pPageChangedListener(NULL)
-, m_pPageDataSourceListener(NULL)
-, m_pPageChangedHandler(NULL)
-, m_pPageDataSourceHandler(NULL)
 {
-	CTableView::setDataSourceSelector(this, tableviewdatasource_selector(CPageView::tableDataSource));
-	CTableView::setAutoRelocate(true);
-	CTableView::setAutoRelocateSpeed(700.0f);
+	setAutoRelocate(true);
+	setAutoRelocateSpeed(700.0f);
 }
 
 CPageView* CPageView::create(const CCSize& tPageSize)
@@ -54,12 +48,14 @@ CPageView* CPageView::create(const CCSize& tPageSize)
 	return NULL;
 }
 
-CPageView* CPageView::create(const CCSize& tPageSize, unsigned int uPageCount, CCObject* pTarget, SEL_PageViewDataSourceHandler pDataSourceHandler)
+CPageView* CPageView::create(const CCSize& tPageSize, unsigned int uPageCount, CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler)
 {
 	CPageView* pRet = new CPageView();
-	if( pRet && pRet->initWithParams(tPageSize, tPageSize, uPageCount, pRet, tableviewdatasource_selector(CPageView::tableDataSource)) )
+	if( pRet && pRet->initWithSize(tPageSize) )
 	{
-		pRet->setDataSourceSelector(pTarget, pDataSourceHandler);
+		pRet->setSizeOfCell(tPageSize);
+		pRet->setCountOfCell(uPageCount);
+		pRet->setDataSourceAdapter(pListener, pHandler);
 		pRet->autorelease();
 		return pRet;
 	}
@@ -69,59 +65,59 @@ CPageView* CPageView::create(const CCSize& tPageSize, unsigned int uPageCount, C
 
 void CPageView::onScrolling()
 {
+	if( m_uCellsCount == 0 )
+		return;
+
 	CTableView::onScrolling();
 
-	unsigned int nPage = cellBeginIndexFromOffset(getContentOffset());
+	CCPoint tPageIdxOffset;
+	switch( m_eDirection )
+	{
+	case eScrollViewDirectionHorizontal:
+		tPageIdxOffset = getContentOffset() - CCPoint(m_obContentSize.width / 2, 0);
+		break;
+	case eScrollViewDirectionVertical:
+		tPageIdxOffset = getContentOffset() + CCPoint(0, m_obContentSize.height / 2);
+		break;
+	default:
+		break;
+	}
+
+	unsigned int nPage = cellBeginIndexFromOffset(tPageIdxOffset);
 	if( nPage != m_nPageIndex )
 	{
 		m_nPageIndex = nPage;
-		executePageChanged(this, m_nPageIndex);
+		executePageChangedHandler(this, m_nPageIndex);
 	}
 }
 
-void CPageView::setPageChangedSelector(CCObject* pTarget, SEL_PageViewChangedHandler pHandler)
+void CPageView::updateCellAtIndex(unsigned int idx)
 {
-	if( pTarget && pHandler )
+	CPageViewCell* pCell = (CPageViewCell*)(executeDataSourceAdapterHandler(dequeueCell(), idx));
+#if 1
+    CCAssert(pCell != NULL, "cell can not be nil");
+#endif
+
+	pCell->setIdx(idx);
+
+	switch(m_eDirection)
 	{
-		m_pPageChangedListener = pTarget;
-		m_pPageChangedHandler = pHandler;
+	case eScrollViewDirectionHorizontal:
+		pCell->setAnchorPoint(CCPointZero);
+		break;
+	default:
+		pCell->setAnchorPoint(CCPoint(0, 1));
+		break;
 	}
-}
+	
+	pCell->setContentSize(m_tCellsSize);
+	pCell->setPosition(cellPositionFromIndex(idx));
 
-void CPageView::setDataSourceSelector(CCObject* pTarget, SEL_PageViewDataSourceHandler pHandler)
-{
-	if( pTarget && pHandler )
-	{
-		m_pPageDataSourceListener = pTarget;
-		m_pPageDataSourceHandler = pHandler;
-	}
-}
+    m_pContainer->addChild(pCell);
+	insertSortableCell(pCell, idx);
+    pCell->retain();
 
-void CPageView::executePageChanged(CPageView* pPage, unsigned int nPageIndx)
-{
-	if( m_pPageChangedListener && m_pPageChangedHandler )
-	{
-		(m_pPageChangedListener->*m_pPageChangedHandler)(pPage, nPageIndx);
-	}
-}
-
-void CPageView::reloadData()
-{
-	if( !m_pPageDataSourceListener || !m_pPageDataSourceHandler )
-	{
-		return;
-	}
-	CTableView::reloadData();
-}
-
-CPageViewCell* CPageView::dequeuePage()
-{
-	return (CPageViewCell*) dequeueCell();
-}
-
-CTableViewCell* CPageView::tableDataSource(CTableView* pTable, unsigned int idx)
-{
-	return (m_pPageDataSourceListener->*m_pPageDataSourceHandler)(this, idx);
+	m_pIndices->insert(idx);
 }
 
 NS_CC_WIDGET_END

@@ -31,8 +31,9 @@ NS_CC_WIDGET_BEGIN
 CPanel::CPanel()
 : m_pSelectedWidget(NULL)
 , m_eChildTouchModel(eWidgetTouchNone)
+, m_pBackgroundImage(NULL)
 {
-	setWidgetNode(this);
+	setThisObject(this);
 }
 
 CPanel::~CPanel()
@@ -60,8 +61,22 @@ bool CPanel::init()
 	return CCNode::init();
 }
 
-CWidget* CPanel::collisionWithWidget(const CCPoint &tPoint)
+void CPanel::setContentSize(const CCSize& tContentSize)
+{ 
+	CCNodeRGBA::setContentSize(tContentSize);
+	CC_WIDGET_UPDATE_BACKGROUND_POS;
+}
+
+CWidgetTouchModel CPanel::executeTouchBegan(CCTouch *pTouch)
 {
+	m_pSelectedWidget = NULL;
+	m_eChildTouchModel = eWidgetTouchNone;
+	return CWidget::executeTouchBeganHandler(pTouch);
+}
+
+CWidgetTouchModel CPanel::onTouchBegan(CCTouch *pTouch)
+{
+	CCPoint tNodePoint = convertToNodeSpace(pTouch->getLocation());
 	if( m_pChildren && m_pChildren->count() > 0 )
 	{
 		CCObject* pObject = NULL;
@@ -71,44 +86,43 @@ CWidget* CPanel::collisionWithWidget(const CCPoint &tPoint)
 			CWidget* pWidget = dynamic_cast<CWidget*>(pObject);
 			if( pWidget && pNode->isVisible() && pWidget->isEnabled() && pWidget->isTouchEnabled() )
 			{
-				if( pNode->boundingBox().containsPoint(tPoint) )
+				if( pNode->boundingBox().containsPoint(tNodePoint) )
 				{
-					return pWidget;
+					m_eChildTouchModel = pWidget->executeTouchBeganHandler(pTouch);
+					if( m_eChildTouchModel == eWidgetTouchNone )
+					{
+						m_pSelectedWidget = NULL;
+						m_eChildTouchModel = eWidgetTouchNone;
+					}
+					else
+					{
+						m_pSelectedWidget = pWidget;
+						return m_eChildTouchModel;
+					}
 				}
 			}
 		}
 	}
-	return NULL;
-}
+	return eWidgetTouchTransient;
 
-CWidgetTouchModel CPanel::executeTouchBegan(CCTouch *pTouch)
-{
-	m_pSelectedWidget = NULL;
-	m_eChildTouchModel = eWidgetTouchNone;
-	return CWidget::executeTouchBegan(pTouch);
-}
-
-CWidgetTouchModel CPanel::onTouchBegan(CCTouch *pTouch)
-{
-	CCPoint tNodePoint = convertToNodeSpace(pTouch->getLocation());
-	m_pSelectedWidget = collisionWithWidget(tNodePoint);
+	/*m_pSelectedWidget = collisionWithWidget(tNodePoint);
 	if( m_pSelectedWidget )
 	{
-		m_eChildTouchModel = m_pSelectedWidget->executeTouchBegan(pTouch);
+		m_eChildTouchModel = m_pSelectedWidget->executeTouchBeganHandler(pTouch);
 		if( m_eChildTouchModel == eWidgetTouchNone )
 		{
 			m_pSelectedWidget = NULL;
 		}
 		return m_eChildTouchModel;
 	}
-	return eWidgetTouchTransient;
+	return eWidgetTouchTransient;*/
 }
 
 void CPanel::onTouchMoved(CCTouch *pTouch, float fDuration)
 {
 	if( m_pSelectedWidget && !m_pSelectedWidget->isTouchInterrupted() )
 	{
-		m_pSelectedWidget->executeTouchMoved(pTouch, fDuration);
+		m_pSelectedWidget->executeTouchMovedHandler(pTouch, fDuration);
 	}
 }
 
@@ -116,14 +130,7 @@ void CPanel::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
 	if( m_pSelectedWidget && !m_pSelectedWidget->isTouchInterrupted() )
 	{
-		m_pSelectedWidget->executeTouchEnded(pTouch, fDuration);
-		return;
-	}
-
-	CCPoint tNodePoint = m_pParent->convertToNodeSpace(pTouch->getLocation());
-	if( this->boundingBox().containsPoint(tNodePoint) )
-	{
-		executeClick();
+		m_pSelectedWidget->executeTouchEndedHandler(pTouch, fDuration);
 	}
 }
 
@@ -131,19 +138,20 @@ void CPanel::onTouchCancelled(CCTouch *pTouch, float fDuration)
 {
 	if( m_pSelectedWidget && !m_pSelectedWidget->isTouchInterrupted() )
 	{
-		m_pSelectedWidget->executeTouchCancelled(pTouch, fDuration);
+		m_pSelectedWidget->executeTouchCancelledHandler(pTouch, fDuration);
 	}
 }
 
 
 CPanelColor::CPanelColor()
-: _displayedOpacity(255)
-, _realOpacity (255)
-, _displayedColor(ccWHITE)
-, _realColor(ccWHITE)
-, _cascadeOpacityEnabled(false)
-, _cascadeColorEnabled(false)
 {
+	_displayedOpacity = 255;
+	_realOpacity = 255;
+	_displayedColor = ccWHITE;
+	_realColor = ccWHITE;
+	_cascadeOpacityEnabled = false;
+	_cascadeColorEnabled = false;
+
 	m_tBlendFunc.src = CC_BLEND_SRC;
 	m_tBlendFunc.dst = CC_BLEND_DST;
 }

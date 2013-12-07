@@ -30,7 +30,7 @@ NS_CC_WIDGET_BEGIN
 
 CLabelAtlas::CLabelAtlas()
 {
-	setWidgetNode(this);
+	setThisObject(this);
 	m_bTouchEnabled = false;
 	setAnchorPoint(CCPoint(0.5f, 0.5f));
 }
@@ -66,16 +66,31 @@ CLabelAtlas* CLabelAtlas::create(const char *string, const char *fntFile)
 
 CWidgetTouchModel CLabelAtlas::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN
+
 	return eWidgetTouchTransient;
+}
+
+void CLabelAtlas::onTouchMoved(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
 }
 
 void CLabelAtlas::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED
+
 	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
 	if( boundingBox().containsPoint(touchPointInView) )
 	{
-		executeClick();
+		executeClickHandler(this);
 	}
 }
+
+void CLabelAtlas::onTouchCancelled(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
+}
+
 
 NS_CC_WIDGET_END

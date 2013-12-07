@@ -44,13 +44,10 @@ CTableViewCell::~CTableViewCell()
 
 CTableView::CTableView()
 : m_uCellsCount(0)
-, m_pDataSourceHandler(NULL)
-, m_pDataSourceListener(NULL)
 , m_tCellsSize(CCSizeZero)
 , m_bAutoRelocate(false)
 , m_fAutoRelocateSpeed(CTABLEVIEW_AUTO_RELOCATE_SPPED)
 {
-	setTouchEnabled(false);
 	m_eDirection  = eScrollViewDirectionHorizontal;
 	m_pIndices    = new set<unsigned int>();
 	m_pPositions  = new vector<float>();
@@ -69,10 +66,10 @@ CTableView::~CTableView()
 }
 
 CTableView* CTableView::create(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount, 
-		CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler)
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler)
 {
 	CTableView* pRet = new CTableView();
-	if( pRet && pRet->initWithParams(tViewSize, tCellSize, uCellCount, pTarget, pDataSourceHandler) )
+	if( pRet && pRet->initWithParams(tViewSize, tCellSize, uCellCount, pListener, pHandler) )
 	{
 		pRet->autorelease();
 		return pRet;
@@ -82,13 +79,13 @@ CTableView* CTableView::create(const CCSize& tViewSize, const CCSize& tCellSize,
 }
 
 bool CTableView::initWithParams(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount, 
-		CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler)
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler)
 {
 	if( initWithSize(tViewSize) )
 	{
 		setSizeOfCell(tCellSize);
 		setCountOfCell(uCellCount);
-		setDataSourceSelector(pTarget, pDataSourceHandler);
+		setDataSourceAdapter(pListener, pHandler);
 		return true;
 	}
 	return false;
@@ -134,45 +131,11 @@ void CTableView::setAutoRelocateSpeed(float fSpeed)
 	m_fAutoRelocateSpeed = fSpeed;
 }
 
-void CTableView::setDataSourceSelector(CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler)
-{
-    if( pTarget && pDataSourceHandler )
-    {
-        m_pDataSourceHandler = pDataSourceHandler;
-        m_pDataSourceListener = pTarget;
-    }
-}
-
-CTableViewCell* CTableView::executeDataSource(CTableView* pTable, unsigned int idx)
-{
-    if( m_pDataSourceListener && m_pDataSourceHandler )
-    {
-        return (m_pDataSourceListener->*m_pDataSourceHandler)(pTable, idx);
-    }
-    return NULL;
-}
-
 void CTableView::reloadData()
 {
-	if( !m_pDataSourceListener || !m_pDataSourceHandler )
-	{
-		return;
-	}
-
-    if( m_tCellsSize.width == 0 || m_tCellsSize.height == 0 )
-    {
-        return;
-    }
-    
-    if( m_uCellsCount == 0 )
-    {
-        return;
-    }
-    
-    if( m_eDirection == eScrollViewDirectionBoth )
-    {
-        return;
-    }
+	CCAssert(m_pDataSourceAdapterListener && m_pDataSourceAdapterHandler, "reloadData");
+	CCAssert((int)m_tCellsSize.width != 0 && (int)m_tCellsSize.height != 0, "reloadData");
+    CCAssert(m_eDirection != eScrollViewDirectionBoth, "reloadData");
 
 	list<CTableViewCell*>::iterator iter = m_pCellsUsed->begin();
 	while(iter != m_pCellsUsed->end())
@@ -183,7 +146,6 @@ void CTableView::reloadData()
 		iter = m_pCellsUsed->erase(iter);
 	}
 
-    setTouchEnabled(true);
 	m_pIndices->clear();
     m_pPositions->clear();
 	this->updatePositions();
@@ -220,6 +182,9 @@ void CTableView::removeAllFromFreed()
 
 void CTableView::onScrolling()
 {
+	if( m_uCellsCount == 0 )
+		return;
+
     unsigned uBeginIdx = 0, uEndIdx = 0;
 
 	uBeginIdx = cellBeginIndexFromOffset( getContentOffset() );
@@ -284,6 +249,9 @@ void CTableView::onDeaccelerateScrollEnded()
 
 void CTableView::onDraggingScrollEnded()
 {
+	if( m_uCellsCount == 0 )
+		return;
+
 	if( m_bAutoRelocate )
 	{
 		CCPoint tOffset = getContentOffset();
@@ -484,15 +452,6 @@ CCArray* CTableView::getCells()
 		}
 	}
 
-	//if( !m_pCellsFreed->empty() )
-	//{
-	//	list<CTableViewCell*>::iterator iter = m_pCellsFreed->begin();
-	//	for(; iter != m_pCellsFreed->end(); ++iter)
-	//	{
-	//		pArray->addObject(*iter);
-	//	}
-	//}
-
 	pArray->autorelease();
 	return pArray;
 }
@@ -517,9 +476,9 @@ CTableViewCell* CTableView::cellAtIndex(unsigned int idx)
 
 void CTableView::updateCellAtIndex(unsigned int idx)
 {
-	CTableViewCell* pCell = executeDataSource(this, idx);
-#if 0
-    CCAssert(pCell != NULL, "cell can not be null");
+	CTableViewCell* pCell = (CTableViewCell*)(executeDataSourceAdapterHandler(dequeueCell(), idx));
+#if 1
+    CCAssert(pCell != NULL, "cell can not be nil");
 #endif
 
 	pCell->setIdx(idx);

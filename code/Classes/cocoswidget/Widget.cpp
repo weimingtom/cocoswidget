@@ -29,62 +29,12 @@ THE SOFTWARE.
 
 NS_CC_WIDGET_BEGIN
 
-#define CCWIDGET_LONGPRESS_TIME 0.5f
-
-CCheckableProtocol::CCheckableProtocol()
-: m_bChecked(false)
-, m_pCheckListener(NULL)
-, m_pCheckHandler(NULL)
-, m_nExclusion(-1)
-{
-
-}
-
-bool CCheckableProtocol::isChecked()
-{
-	return m_bChecked;
-}
-
-void CCheckableProtocol::setChecked(bool bChecked)
-{
-	m_bChecked = bChecked;
-}
-
-void CCheckableProtocol::setCheckSelector(CCObject* pTarget, SEL_CheckHandler pHandler)
-{
-	if( pTarget && pHandler )
-	{
-		m_pCheckListener = pTarget;
-		m_pCheckHandler = pHandler;
-	}
-}
-
-void CCheckableProtocol::executeCheck(CCObject* pTarget)
-{
-	if( m_pCheckHandler && m_pCheckListener )
-	{
-		(m_pCheckListener->*m_pCheckHandler)(pTarget, m_bChecked);
-	}
-}
-
-void CCheckableProtocol::setExclusion(int nExclusion)
-{
-	m_nExclusion = nExclusion;
-}
-
-int CCheckableProtocol::getExclusion()
-{
-	return m_nExclusion;
-}
-
 
 CWidget::CWidget()
 : m_strId("")
-, m_pWidgetNode(NULL)
+, m_pThisObject(NULL)
 , m_bEnabled(true)
 , m_bTouchEnabled(true)
-, m_pClickListener(NULL)
-, m_pClickHandler(NULL)
 , m_pTouchBeganListener(NULL)
 , m_pTouchMovedListener(NULL)
 , m_pTouchEndedListener(NULL)
@@ -94,15 +44,7 @@ CWidget::CWidget()
 , m_pTouchEndedHandler(NULL)
 , m_pTouchCancelledHandler(NULL)
 , m_bTouchInterrupt(false)
-, m_pLongClickListener(NULL)
-, m_pLongClickHandler(NULL)
-, m_bLongClickEnabled(false)
-, m_fLongClickTimeCounter(0.0f)
-, m_pLongClickLastTouch(NULL)
-, m_fLongClickLastTouchDuration(0.0f)
 , m_nUserTag(kCCNodeTagInvalid)
-, m_bLongClickedUpdate(false)
-, m_pBackgroundNode(NULL)
 {
 	
 }
@@ -112,9 +54,9 @@ CWidget::~CWidget()
 	
 }
 
-void CWidget::setWidgetNode(CCNode* pWidgetNode)
+void CWidget::setThisObject(CCObject* pThis)
 {
-	m_pWidgetNode = pWidgetNode;
+	m_pThisObject = pThis;
 }
 
 int CWidget::getUserTag() const
@@ -157,192 +99,85 @@ void CWidget::setTouchEnabled(bool bTouchEnabled)
 	m_bTouchEnabled = bTouchEnabled;
 }
 
-void CWidget::updateWidget(float dt)
+CWidgetTouchModel CWidget::executeTouchBeganHandler(CCTouch* pTouch)
 {
-	if( m_bLongClickedUpdate && m_bLongClickEnabled )
-	{
-		if( m_fLongClickTimeCounter > CCWIDGET_LONGPRESS_TIME )
+	m_bTouchInterrupt = false;
+
+    if( m_pTouchBeganListener && m_pTouchBeganHandler )
+    {
+		CWidgetTouchModel eUserTouchModel = (m_pTouchBeganListener->*m_pTouchBeganHandler)(m_pThisObject, pTouch);
+		if( eUserTouchModel == eWidgetTouchNone )
 		{
-			interruptTouchCascade(m_pLongClickLastTouch, m_fLongClickLastTouchDuration);
-			if( executeLongClick() )
-			{
-				setLongClickTouchHandlerWidget(m_pWidgetNode);
-			}
-			m_bLongClickedUpdate = false;
-			stopScheduleUpdate();
+			return eWidgetTouchNone;
 		}
 		else
 		{
-			m_fLongClickTimeCounter += dt;
-		}
-	}
-}
-
-void CWidget::setClickSelector(CCObject *pTarget, SEL_ClickHandler pHandler)
-{
-	if( pTarget && pHandler )
-	{
-		m_pClickListener = pTarget;
-		m_pClickHandler = pHandler;
-	}
-}
-
-void CWidget::executeClick()
-{
-	if( m_pClickListener && m_pClickHandler )
-	{
-		(m_pClickListener->*m_pClickHandler)(m_pWidgetNode);
-	}
-}
-
-void CWidget::setLongClickSelector(CCObject* pTarget, SEL_LongClickHandler pHandler)
-{
-	if( pTarget && pHandler )
-	{
-		m_pLongClickListener = pTarget;
-		m_pLongClickHandler = pHandler;
-		m_bLongClickEnabled = true;
-	}
-	else
-	{
-		m_bLongClickEnabled = false;
-	}
-}
-
-bool CWidget::executeLongClick()
-{
-	if( m_pLongClickListener && m_pLongClickHandler )
-	{
-		return (m_pLongClickListener->*m_pLongClickHandler)(m_pWidgetNode);
-	}
-	return false;
-}
-
-CWidgetTouchModel CWidget::executeTouchBegan(CCTouch *pTouch)
-{
-	m_pLongClickLastTouch = NULL;
-	m_fLongClickTimeCounter = 0.0f;
-	m_bTouchInterrupt = false;
-    
-    if( m_pTouchBeganListener && m_pTouchBeganHandler )
-    {
-        if( (m_pTouchBeganListener->*m_pTouchBeganHandler)(m_pWidgetNode, pTouch) == eWidgetTouchNone )
-        {
-			return eWidgetTouchNone;
+			this->onTouchBegan(pTouch);
+			return eUserTouchModel;
 		}
     }
-	
-	if( m_bLongClickEnabled )
-	{
-		m_bLongClickedUpdate = true;
-		performScheduleUpdate();
-	}
 
     return this->onTouchBegan(pTouch);
 }
 
-void CWidget::executeTouchMoved(CCTouch *pTouch, float fDuration)
+void CWidget::executeTouchMovedHandler(CCTouch* pTouch, float fDuration)
 {
     if( m_pTouchMovedListener && m_pTouchMovedHandler )
     {
-        if( !(m_pTouchMovedListener->*m_pTouchMovedHandler)(m_pWidgetNode, pTouch, fDuration) )
+        if( !(m_pTouchMovedListener->*m_pTouchMovedHandler)(m_pThisObject, pTouch, fDuration) )
         {
             return;
         }
     }
-
-	if( m_bLongClickEnabled )
-	{
-		m_pLongClickLastTouch = pTouch;
-		m_fLongClickLastTouchDuration = fDuration;
-
-		CCPoint tMovePoint = m_pWidgetNode->getParent()->convertToNodeSpace(pTouch->getLocation());
-		if( !m_pWidgetNode->boundingBox().containsPoint(tMovePoint) )
-		{
-			m_bLongClickedUpdate = false;
-			stopScheduleUpdate();
-		}
-	}
-
     return this->onTouchMoved(pTouch, fDuration);
 }
 
-void CWidget::executeTouchEnded(CCTouch *pTouch, float fDuration)
+void CWidget::executeTouchEndedHandler(CCTouch* pTouch, float fDuration)
 {
     if( m_pTouchEndedListener && m_pTouchEndedHandler )
     {
-        if( !(m_pTouchEndedListener->*m_pTouchEndedHandler)(m_pWidgetNode, pTouch, fDuration) )
+        if( !(m_pTouchEndedListener->*m_pTouchEndedHandler)(m_pThisObject, pTouch, fDuration) )
         {
             return;
         }
     }
-
-	if( m_bLongClickEnabled )
-	{
-		m_fLongClickTimeCounter = 0.0f;
-		m_pLongClickLastTouch = NULL;
-		m_bLongClickedUpdate = false;
-		stopScheduleUpdate();
-	}
-
     return this->onTouchEnded(pTouch, fDuration);
 }
 
-void CWidget::executeTouchCancelled(CCTouch *pTouch, float fDuration)
+void CWidget::executeTouchCancelledHandler(CCTouch* pTouch, float fDuration)
 {
     if( m_pTouchCancelledListener && m_pTouchCancelledHandler )
     {
-        if( !(m_pTouchCancelledListener->*m_pTouchCancelledHandler)(m_pWidgetNode, pTouch, fDuration) )
+        if( !(m_pTouchCancelledListener->*m_pTouchCancelledHandler)(m_pThisObject, pTouch, fDuration) )
         {
             return;
         }
     }
-
-	if( m_bLongClickEnabled )
-	{
-		m_fLongClickTimeCounter = 0.0f;
-		m_pLongClickLastTouch = NULL;
-		m_bLongClickedUpdate = false;
-		stopScheduleUpdate();
-	}
-
     return this->onTouchCancelled(pTouch, fDuration);
 }
 
-void CWidget::setTouchBeganSelector(CCObject *pTarget, SEL_TouchBeganHandler pHandler)
+void CWidget::setOnTouchBeganListener(CCObject* pListener, SEL_TouchBeganHandler pHandler)
 {
-    if( pTarget && pHandler )
-    {
-        m_pTouchBeganListener = pTarget;
-        m_pTouchBeganHandler = pHandler;
-    }
+	m_pTouchBeganListener = pListener;
+    m_pTouchBeganHandler = pHandler;
 }
 
-void CWidget::setTouchMovedSelector(CCObject *pTarget, SEL_TouchHandler pHandler)
+void CWidget::setOnTouchMovedListener(CCObject* pListener, SEL_TouchEventHandler pHandler)
 {
-    if( pTarget && pHandler )
-    {
-        m_pTouchMovedListener = pTarget;
-        m_pTouchMovedHandler = pHandler;
-    }
+	m_pTouchMovedListener = pListener;
+    m_pTouchMovedHandler = pHandler;
 }
 
-void CWidget::setTouchEndedSelector(CCObject *pTarget, SEL_TouchHandler pHandler)
+void CWidget::setOnTouchEndedListener(CCObject* pListener, SEL_TouchEventHandler pHandler)
 {
-    if( pTarget && pHandler )
-    {
-        m_pTouchEndedListener = pTarget;
-        m_pTouchEndedHandler = pHandler;
-    }
+	m_pTouchEndedListener = pListener;
+    m_pTouchEndedHandler = pHandler;
 }
 
-void CWidget::setTouchCancelledSelector(CCObject *pTarget, SEL_TouchHandler pHandler)
+void CWidget::setOnTouchCancelledListener(CCObject* pListener, SEL_TouchEventHandler pHandler)
 {
-    if( pTarget && pHandler )
-    {
-        m_pTouchCancelledListener = pTarget;
-        m_pTouchCancelledHandler = pHandler;
-    }
+	m_pTouchCancelledListener = pListener;
+    m_pTouchCancelledHandler = pHandler;
 }
 
 void CWidget::interruptTouch(CCTouch* pTouch, float fDuration)
@@ -350,30 +185,30 @@ void CWidget::interruptTouch(CCTouch* pTouch, float fDuration)
     if( !m_bTouchInterrupt )
     {
         m_bTouchInterrupt = true;
-        executeTouchCancelled(pTouch, fDuration);
+        executeTouchCancelledHandler(pTouch, fDuration);
     }
 }
 
 void CWidget::interruptTouchCascade(CCTouch* pTouch, float fDuration)
 {
-	for(CCNode* pNode = m_pWidgetNode; pNode != NULL; pNode = pNode->getParent())
+	for(CCNode* pNode = (CCNode*)m_pThisObject; pNode != NULL; pNode = pNode->getParent())
 	{
 		CWidget* pWidgetParent = dynamic_cast<CWidget*>(pNode);
-		if( pWidgetParent )
+		if( pWidgetParent != NULL )
 		{
 			pWidgetParent->interruptTouch(pTouch, fDuration);
 		}
 	}
 }
 
-void CWidget::setLongClickTouchHandlerWidget(CCNode* pWidget)
+void CWidget::setLongClickTouchHandlerWidget(CCNode* pWidget, int id)
 {
-	for(CCNode* pNode = m_pWidgetNode; pNode != NULL; pNode = pNode->getParent())
+	for(CCNode* pNode = (CCNode*)m_pThisObject; pNode != NULL; pNode = pNode->getParent())
 	{
 		CWidgetLayout* pWidgetLayoutParent = dynamic_cast<CWidgetLayout*>(pNode);
-		if( pWidgetLayoutParent )
+		if( pWidgetLayoutParent != NULL )
 		{
-			pWidgetLayoutParent->setLongClickTouchHandlerWidget(pWidget);
+			pWidgetLayoutParent->setLongClickTouchHandlerWidget(pWidget, id);
 			return;
 		}
 	}
@@ -383,36 +218,5 @@ bool CWidget::isTouchInterrupted()
 {
     return m_bTouchInterrupt;
 }
-
-void CWidget::setBackgroundNode(CCNode* pNode)
-{
-	if( pNode )
-	{
-		if( m_pBackgroundNode )
-		{
-			m_pWidgetNode->removeChild(m_pBackgroundNode, true);
-		}
-		m_pBackgroundNode = pNode;
-		m_pBackgroundNode->setAnchorPoint(CCPoint(0.5f, 0.5f));
-		updateBackgroundNodePosition();
-		m_pWidgetNode->addChild(m_pBackgroundNode, -1);
-	}
-}
-
-void CWidget::updateBackgroundNodePosition()
-{
-	if( m_pBackgroundNode )
-	{
-		m_pBackgroundNode->setPosition(
-			m_pWidgetNode->getContentSize().width / 2,
-			m_pWidgetNode->getContentSize().height / 2);
-	}
-}
-
-CCNode* CWidget::getBackgroundNode() const
-{
-	return m_pBackgroundNode;
-}
-
 
 NS_CC_WIDGET_END

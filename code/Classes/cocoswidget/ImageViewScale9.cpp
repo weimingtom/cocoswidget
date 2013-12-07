@@ -30,21 +30,36 @@ NS_CC_WIDGET_BEGIN
 
 CImageViewScale9::CImageViewScale9()
 {
-	
+	setThisObject(this);
+	setTouchEnabled(false);
 }
 
 CWidgetTouchModel CImageViewScale9::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN;
+
     return eWidgetTouchTransient;
+}
+
+void CImageViewScale9::onTouchMoved(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
 }
 
 void CImageViewScale9::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED;
+
 	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
 	if( boundingBox().containsPoint(touchPointInView) )
 	{
-		executeClick();
+		executeClickHandler(this);
 	}
+}
+
+void CImageViewScale9::onTouchCancelled(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
 }
 
 CImageViewScale9* CImageViewScale9::create(const char* file, CCRect rect,  CCRect capInsets)

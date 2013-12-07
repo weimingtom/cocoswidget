@@ -40,20 +40,12 @@ THE SOFTWARE.
 #include "WidgetMacros.h"
 #include "Widget.h"
 #include "Panel.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
 class CScrollView;
 class CScrollViewContainer;
-
-/**
- * 名称 : SEL_ScrollViewHandler
- * 功能 : 滚动事件的外部处理函数模型
- * 输入 : pSender - 调用本函数的控件
- * 输出 : 
- */
-typedef void (CCObject::*SEL_ScrollViewHandler)(CCObject* pSender);
-#define scrollview_selector(_SELECTOR_) (cocos2d::cocoswidget::SEL_ScrollViewHandler)(&_SELECTOR_)
 
 /**
  * 枚举 : CScrollViewDirection
@@ -87,7 +79,7 @@ public:
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 实现了滚动效果
  */
-class CScrollView : public CPanel
+class CScrollView : public CPanel, public CScrollableProtocol
 {
 public:
 	CScrollView();
@@ -111,14 +103,6 @@ public:
 	 * 输出 : 是否初始化成功
 	 */
 	virtual bool initWithSize(const CCSize& tSize);
-
-	/**
-	 * 名称 : collisionWithWidget()
-	 * 功能 : 检测是否点击滑动控件的容器
-	 * 输入 : tPoint - 点击坐标
-	 * 输出 : 滑动控件容器
-	 */
-	virtual CWidget* collisionWithWidget(const CCPoint& tPoint);
 
 	/**
 	 * 名称 : setContainerSize()
@@ -231,15 +215,6 @@ public:
 	 * 输出 : 是否开始滑动
 	 */
     bool isTouchMoved();
-
-	/**
-	 * 名称 : setScrollViewSelector()
-	 * 功能 : 设置滑动控件的滑动事件外部处理函数
-	 * 输入 : pTarget - 处理对象
-	 *        pHandler - 处理函数
-	 * 输出 : 
-	 */
-	void setScrollViewSelector(CCObject* pTarget, SEL_ScrollViewHandler pHandler);
     
 	/**
 	 * 名称 : onTouchBegan()
@@ -413,7 +388,6 @@ protected:
 	virtual void onDraggingScrollEnded(){};
 	void updateLimitOffset();
 	bool validateOffset(CCPoint& tPoint);
-	void executeScroll();
 
 protected:
 	/// 滑动容器
@@ -442,9 +416,6 @@ protected:
 	CCPoint m_tMinOffset;
 	/// 滑动容器最大的位置
 	CCPoint m_tMaxOffset;
-
-	CCObject* m_pScrollListener;
-	SEL_ScrollViewHandler m_pScrollHandler;
 };
 
 NS_CC_WIDGET_END

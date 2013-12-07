@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "cocos2d.h"
 #include "WidgetMacros.h"
 #include "Widget.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
@@ -44,28 +45,16 @@ NS_CC_WIDGET_BEGIN
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 可接收事件的文本
  */
-class CLabel : public CCLabelTTF, public CWidget
+class CLabel : public CCLabelTTF, public CWidget, public CClickableProtocol, public CLongClickableProtocol
 {
 public:
 	CLabel();
 	virtual ~CLabel();
 
-	/**
-	 * 名称 : onTouchBegan()
-	 * 功能 : 改变返回值为 暂时性处理事件
-	 * 输入 : 
-	 * 输出 : eWidgetTouchTransient
-	 */
-    virtual CWidgetTouchModel onTouchBegan(CCTouch *pTouch);
-
-	/**
-	 * 名称 : onTouchEnded()
-	 * 功能 : 触摸结束时调用
-	 * 输入 : pTouch - 触摸信息
-	 *        fDuration - 触摸开始后距现在经过的时间
-	 * 输出 : 判断是否执行Click
-	 */
-	virtual void onTouchEnded(CCTouch *pTouch, float fDuration);
+    virtual CWidgetTouchModel onTouchBegan(CCTouch* pTouch);
+	virtual void onTouchMoved(CCTouch* pTouch, float fDuration);
+	virtual void onTouchEnded(CCTouch* pTouch, float fDuration);
+	virtual void onTouchCancelled(CCTouch* pTouch, float fDuration);
 
 	static CLabel* create();
 	static CLabel* create(const char *pString, const char *pFontName, float fFontSize);
@@ -74,7 +63,7 @@ public:
 	static CLabel* create(const char *pString, const char *pFontName, float fFontSize,
 		const CCSize& tDimensions, CCTextAlignment hAlignment, CCVerticalTextAlignment vAlignment);
 
-	WIDGET_CHILDE_SCHEDULE(CLabel);
+	CC_WIDGET_LONGCLICK_SCHEDULE(CLabel);
 };
 
 NS_CC_WIDGET_END

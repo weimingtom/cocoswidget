@@ -35,6 +35,8 @@ THE SOFTWARE.
 #include "cocos2d.h"
 #include "WidgetMacros.h"
 #include "Widget.h"
+#include "WidgetProtocol.h"
+#include <map>
 
 NS_CC_WIDGET_BEGIN
 
@@ -62,135 +64,61 @@ public:
 	CWidgetLayout();
 	virtual ~CWidgetLayout();
 	virtual bool init();
+	virtual void visit();
 	virtual void onEnter();
 	virtual void onExit();
 	static CWidgetLayout* create();
 
-	/**
-	 * 名称 : visit()
-	 * 功能 : 每帧记录触摸所经过的时间
-	 * 输入 : 
-	 * 输出 : 
-	 */
-	virtual void visit();	
-
-	/**
-	 * 名称 : getTouchPriority()
-	 * 功能 : 获取注册引擎的触摸优先级
-	 * 输入 : 
-	 * 输出 : 优先级
-	 */
 	virtual int getTouchPriority();
-
-	/**
-	 * 名称 : setTouchPriority()
-	 * 功能 : 设置注册引擎的触摸优先级
-	 * 输入 : nTouchPriority - 优先级
-	 * 输出 : 
-	 */
 	virtual void setTouchPriority(int nTouchPriority);
-
-	/**
-	 * 名称 : isTouchEnabled()
-	 * 功能 : 获取是否接收触摸事件
-	 * 输入 : 
-	 * 输出 : 是否接收
-	 */
 	virtual bool isTouchEnabled();
-
-	/**
-	 * 名称 : setTouchEnabled()
-	 * 功能 : 设置是否接收触摸事件
-	 * 输入 : bTouchEnabled - 是否接收
-	 * 输出 : 
-	 */
 	virtual void setTouchEnabled(bool bTouchEnabled);
-
-	/**
-	 * 名称 : ccTouchBegan()
-	 * 功能 : 当触摸发生时，由引擎调用
-	 * 输入 : pTouch - 触摸信息 pEvent - 事件
-	 * 输出 : 是否接收后续事件
-	 */
-	virtual bool ccTouchBegan(CCTouch* pTouch, CCEvent* pEvent);
-
-	/**
-	 * 名称 : ccTouchMoved()
-	 * 功能 : 当触摸移动时，由引擎调用
-	 * 输入 : pTouch - 触摸信息 pEvent - 事件
-	 * 输出 : 
-	 */
-	virtual void ccTouchMoved(CCTouch* pTouch, CCEvent* pEvent);
-
-	/**
-	 * 名称 : ccTouchEnded()
-	 * 功能 : 当触摸完成时，由引擎调用
-	 * 输入 : pTouch - 触摸信息 pEvent - 事件
-	 * 输出 : 
-	 */
-	virtual void ccTouchEnded(CCTouch* pTouch, CCEvent* pEvent);
-
-	/**
-	 * 名称 : ccTouchCancelled()
-	 * 功能 : 当触摸被中断时，由引擎调用
-	 * 输入 : pTouch - 触摸信息 pEvent - 事件
-	 * 输出 : 
-	 */
-	virtual void ccTouchCancelled(CCTouch* pTouch, CCEvent* pEvent);
-
-	/**
-	 * 名称 : findViewById()
-	 * 功能 : 获取控件树里的子控件 通过id
-	 * 输入 : id - 子控件id
-	 * 输出 : 子控件
-	 */
+	
 	virtual CCObject* findViewById(const char* id);
 
-	/**
-	 * 名称 : setTouchMovedAfterLongClickSelector()
-	 * 功能 : 设置当子控件长点击之后的触摸事件的外部处理函数
-	 * 输入 : pTarget - 处理对象
-	 *        pHandler - 处理函数
-	 * 输出 : 
-	 */
-	virtual void setTouchMovedAfterLongClickSelector(CCObject* pTarget, SEL_AfterLongClickHandler pHandler);
+	bool isMultiTouchEnabled() const;
+	void setMultiTouchEnabled(bool bEnabled);
 
-	/**
-	 * 名称 : setTouchEndedAfterLongClickSelector()
-	 * 功能 : 设置当子控件长点击之后的触摸事件的外部处理函数
-	 * 输入 : pTarget - 处理对象
-	 *        pHandler - 处理函数
-	 * 输出 : 
-	 */
-	virtual void setTouchEndedAfterLongClickSelector(CCObject* pTarget, SEL_AfterLongClickHandler pHandler);
+	virtual bool ccTouchBegan(CCTouch* pTouch, CCEvent* pEvent);
+	virtual void ccTouchMoved(CCTouch* pTouch, CCEvent* pEvent);
+	virtual void ccTouchEnded(CCTouch* pTouch, CCEvent* pEvent);
+	virtual void ccTouchCancelled(CCTouch* pTouch, CCEvent* pEvent);
 
-	/**
-	 * 名称 : setTouchEndedAfterLongClickSelector()
-	 * 功能 : 设置当子控件长点击之后的触摸事件的外部处理函数
-	 * 输入 : pTarget - 处理对象
-	 *        pHandler - 处理函数
-	 * 输出 : 
-	 */
-	virtual void setTouchCancelledAfterLongClickSelector(CCObject* pTarget, SEL_AfterLongClickHandler pHandler);
+	virtual void ccTouchesBegan(CCSet* pTouches, CCEvent* pEvent);
+	virtual void ccTouchesMoved(CCSet* pTouches, CCEvent* pEvent);
+	virtual void ccTouchesEnded(CCSet* pTouches, CCEvent* pEvent);
+	virtual void ccTouchesCancelled(CCSet* pTouches, CCEvent* pEvent);
+
+	virtual void setOnTouchMovedAfterLongClickListener(CCObject* pListener, SEL_AfterLongClickHandler pHandler);
+	virtual void setOnTouchEndedAfterLongClickListener(CCObject* pListener, SEL_AfterLongClickHandler pHandler);
+	virtual void setOnTouchCancelledAfterLongClickListener(CCObject* pListener, SEL_AfterLongClickHandler pHandler);
 
 public:
-	virtual void setLongClickTouchHandlerWidget(CCNode* pWidget);
+	virtual void setLongClickTouchHandlerWidget(CCObject* pWidgetObject, int nTouchId);
 	
 protected:
 	virtual CCObject* find(CCArray* pChidren, const char* id);
-	CWidget* collisionWithWidget(const CCPoint& tPoint);
-	virtual void executeTouchMovedAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);
-    virtual void executeTouchEndedAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);
-    virtual void executeTouchCancelledAfterLongClick(CCObject* pSender, CCTouch* pTouch, float fDuration);
+	virtual void executeTouchMovedAfterLongClickHandler(CCObject* pSender, CCTouch* pTouch, float fDuration);
+    virtual void executeTouchEndedAfterLongClickHandler(CCObject* pSender, CCTouch* pTouch, float fDuration);
+    virtual void executeTouchCancelledAfterLongClickHandler(CCObject* pSender, CCTouch* pTouch, float fDuration);
 
 protected:
-	int m_nId;
+	struct tagMultiTouchKeeper
+	{
+		CWidget* pWidget;
+		CCObject* pLongClickedWidgetObject;
+		float fTouchedDuration;
+	};
+	std::map<int, tagMultiTouchKeeper> m_mMultiTouchKeeper;
+
+protected:
 	int m_nTouchPriority;
 	bool m_bTouchEnabled;
 	float m_fTouchedDuration;
 	bool m_bIsTouched;
+	bool m_bMultiTouchEnabled;
 
-	CCNode* m_pLongClickedWidget;
+	CCObject* m_pLongClickedWidgetObject;
 	CWidget* m_pSelectedWidget;
 
     CCObject* m_pTouchMovedAfterLongClickListener;

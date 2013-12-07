@@ -37,6 +37,7 @@ THE SOFTWARE.
 #include "WidgetMacros.h"
 #include "Widget.h"
 #include "ScrollView.h"
+#include "WidgetProtocol.h"
 #include <list>
 #include <vector>
 #include <set>
@@ -46,15 +47,6 @@ NS_CC_WIDGET_BEGIN
 class CTableView;
 class CTableViewCell;
 
-/**
- * 名称 : SEL_TableViewDataSourceHandler
- * 功能 : 列表控件的数据项外部回调函数
- * 输入 : pTable - 调用本函数的控件
- *        idx - 目前正在处理第几个列表项
- * 输出 : 列表项
- */
-typedef CTableViewCell* (CCObject::*SEL_TableViewDataSourceHandler)(CTableView* pTable, unsigned int idx);
-#define tableviewdatasource_selector(__SELECTOR__) (cocos2d::cocoswidget::SEL_TableViewDataSourceHandler)(&__SELECTOR__)
 
 /**
  * 类名 : CTableViewCell
@@ -103,7 +95,7 @@ protected:
  * 邮箱 : csdn_viva@foxmail.com
  * 功能 : 列表控件
  */
-class CTableView : public CScrollView
+class CTableView : public CScrollView, public CDataSourceAdapterProtocol
 {
 public:
     CTableView();
@@ -140,15 +132,6 @@ public:
 	 * 输出 : 列表项的大小
 	 */
     const CCSize& getSizeOfCell() const;
-
-	/**
-	 * 名称 : setDataSourceSelector()
-	 * 功能 : 设置列表控件的数据外部回调函数
-	 * 输入 : pTarget - 处理对象
-	 *        pDataSourceHandler - 处理函数
-	 * 输出 : 
-	 */
-    void setDataSourceSelector(CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler);
 
 	/**
 	 * 名称 : isAutoRelocate()
@@ -193,11 +176,11 @@ public:
 	 * 输出 : 是否初始化成功
 	 */
 	bool initWithParams(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount, 
-		CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler);
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler);
 		
     static CTableView* create(const CCSize& tViewSize);
 	static CTableView* create(const CCSize& tViewSize, const CCSize& tCellSize, unsigned int uCellCount, 
-		CCObject* pTarget, SEL_TableViewDataSourceHandler pDataSourceHandler);
+		CCObject* pListener, SEL_DataSoucreAdapterHandler pHandler);
 
 public:
 	/**
@@ -233,14 +216,6 @@ public:
 	void reloadData();
     
 protected:
-	/**
-	 * 名称 : executeDataSource()
-	 * 功能 : 执行外部数据函数
-	 * 输入 : pTable - 本控件
-	 *        idx - 当前处理的列表项下标
-	 * 输出 : 列表项
-	 */
-    CTableViewCell* executeDataSource(CTableView* pTable, unsigned int idx);
 
 	/**
 	 * 名称 : onScrolling()
@@ -273,7 +248,7 @@ protected:
 	unsigned int cellBeginIndexFromOffset(const CCPoint& offset);
 	unsigned int cellEndIndexFromOffset(const CCPoint& offset);
 	CCPoint cellPositionFromIndex(unsigned int idx);
-	void updateCellAtIndex(unsigned int idx);
+	virtual void updateCellAtIndex(unsigned int idx);
 	void updatePositions();
 
 protected:
@@ -286,9 +261,6 @@ protected:
 	std::vector<float>* m_pPositions;
 	std::list<CTableViewCell*>* m_pCellsUsed;
 	std::list<CTableViewCell*>* m_pCellsFreed;
-    
-    SEL_TableViewDataSourceHandler m_pDataSourceHandler;
-    CCObject* m_pDataSourceListener;
 };
 
 NS_CC_WIDGET_END

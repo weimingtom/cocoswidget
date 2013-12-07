@@ -30,22 +30,36 @@ NS_CC_WIDGET_BEGIN
 
 CImageView::CImageView()
 {
-	setWidgetNode(this);
+	setThisObject(this);
 	setTouchEnabled(false);
 }
 
 CWidgetTouchModel CImageView::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN;
+
 	return eWidgetTouchTransient;
+}
+
+void CImageView::onTouchMoved(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
 }
 
 void CImageView::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED;
+
 	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
 	if( boundingBox().containsPoint(touchPointInView) )
 	{
-		executeClick();
+		executeClickHandler(this);
 	}
+}
+
+void CImageView::onTouchCancelled(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
 }
 
 CImageView* CImageView::createWithTexture(CCTexture2D *pTexture)

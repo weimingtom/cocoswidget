@@ -71,24 +71,7 @@ void CToggleView::setChecked(bool bChecked)
 			CC_SAFE_SET_VISIBLE(m_pSelectedImage, true);
 			CC_SAFE_SET_VISIBLE(m_pDisabledImage, false);
 
-			if( m_nExclusion != -1 )
-			{
-				CCArray* pChildren = m_pParent->getChildren();
-				CCObject* pChildObject = NULL;
-				CCARRAY_FOREACH(pChildren, pChildObject)
-				{
-					if( pChildObject == this )
-					{
-						continue;
-					}
-					CToggleView* pChildToggle = dynamic_cast<CToggleView*>(pChildObject);
-					if( pChildToggle && pChildToggle->isEnabled() &&
-						pChildToggle->getExclusion() == m_nExclusion )
-					{
-						pChildToggle->setChecked(false);
-					}
-				}
-			}
+			setUnCheckedForOtherWidgetsByExclusion(m_pParent);
 		}
 		else
 		{
@@ -97,23 +80,37 @@ void CToggleView::setChecked(bool bChecked)
 			CC_SAFE_SET_VISIBLE(m_pDisabledImage, false);
 		}
 		m_bChecked = bChecked;
-		executeCheck(this);
+		executeCheckHandler(this, m_bChecked);
 	}
 }
 
 CWidgetTouchModel CToggleView::onTouchBegan(CCTouch *pTouch)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHBEGAN;
+
 	return eWidgetTouchTransient;
+}
+
+void CToggleView::onTouchMoved(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHMOVED;
 }
 
 void CToggleView::onTouchEnded(CCTouch *pTouch, float fDuration)
 {
+	CC_WIDGET_LONGCLICK_ONTOUCHENDED;
+
 	CCPoint touchPointInView = m_pParent->convertToNodeSpace(pTouch->getLocation());
 	if( boundingBox().containsPoint(touchPointInView) )
 	{
 		setChecked(!m_bChecked);
-		executeClick();
+		executeClickHandler(this);
 	}
+}
+
+void CToggleView::onTouchCancelled(CCTouch *pTouch, float fDuration)
+{
+	CC_WIDGET_LONGCLICK_ONTOUCHCANCELLED;
 }
 
 CToggleView* CToggleView::create()

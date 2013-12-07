@@ -36,6 +36,7 @@ THE SOFTWARE.
 #include "WidgetMacros.h"
 #include "Widget.h"
 #include "Button.h"
+#include "WidgetProtocol.h"
 
 NS_CC_WIDGET_BEGIN
 
@@ -51,13 +52,14 @@ public:
 	CToggleView();
 	virtual ~CToggleView();
 	virtual CWidgetTouchModel onTouchBegan(CCTouch *pTouch);
+	virtual void onTouchMoved(CCTouch *pTouch, float fDuration);
 	virtual void onTouchEnded(CCTouch *pTouch, float fDuration);
+	virtual void onTouchCancelled(CCTouch *pTouch, float fDuration);
 	virtual void setEnabled(bool bEnabled);
 	virtual void setChecked(bool bChecked);
 	static CToggleView* create();
 	static CToggleView* create(const char* pNormal, const char* pSelected = NULL, const char* pDisabled = NULL);
 	static CToggleView* createWith9Sprite(const CCSize& tSize, const char* pNormal, const char* pSelected = NULL, const char* pDisabled = NULL);
-
 };
 
 NS_CC_WIDGET_END

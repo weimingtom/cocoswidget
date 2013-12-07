@@ -35,6 +35,7 @@ THE SOFTWARE.
 #include "WidgetMacros.h"
 #include "Widget.h"
 #include "ScrollView.h"
+#include "WidgetProtocol.h"
 #include <list>
 
 NS_CC_WIDGET_BEGIN

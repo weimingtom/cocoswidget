@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __CCWIDGET_H__
 #define __CCWIDGET_H__
 
-// version CocosWidget 2.0
+// version CocosWidget-beta 2.1 
 // version for Cocos2d-x 2.x
 
 #include "WidgetMacros.h"
@@ -40,8 +40,8 @@ THE SOFTWARE.
 #include "LabelBMFont.h"
 #include "ScrollView.h"
 #include "TableView.h"
-#include "TableGridView.h"
 #include "Panel.h"
+#include "GridPageView.h"
 #include "GridView.h"
 #include "Scale9Sprite.h"
 #include "ImageView.h"
@@ -49,5 +49,8 @@ THE SOFTWARE.
 #include "PageView.h"
 #include "ListView.h"
 #include "CheckBox.h"
+#include "ControlView.h"
+#include "ProgressBar.h"
+#include "Slider.h"
 
 #endif //__CCWIDGET_H__
